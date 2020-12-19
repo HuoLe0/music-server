@@ -167,6 +167,7 @@ public class CommentController {
         JSONObject jsonObject = new JSONObject();
         String id = request.getParameter("id").trim();
         String up = request.getParameter("up").trim();//评论点赞数
+        String userId = request.getParameter("userId").trim();//用户id
         Comment comment = new Comment();
         comment.setId(Integer.parseInt(id));
         comment.setUp(Integer.parseInt(up));
