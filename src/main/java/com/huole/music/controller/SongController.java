@@ -31,15 +31,20 @@ public class SongController {
      * 添加歌曲
      */
     @PostMapping("/add")
-    public Object addSong(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+    public Object addSong(HttpServletRequest request, @RequestParam("pic") MultipartFile pic, @RequestParam("file") MultipartFile file) {
         JSONObject jsonObject = new JSONObject();
         //获取前端传来的参数
         String singerId = request.getParameter("singerId").trim();//歌手id
         String name = request.getParameter("name").trim();//歌名
         String introduction = request.getParameter("introduction").trim();//简介
-        String pic = "/img/songPic/十.jpg";//默认歌曲封面
+//        String pic = "/img/songPic/music.jpg";//默认歌曲封面
         String lyric = request.getParameter("lyric").trim();//歌词
 //        System.out.println(singerId+"++"+name+"++"+introduction+"++"+lyric);
+        if (pic.isEmpty()) {
+            jsonObject.put(Consts.CODE, 0);
+            jsonObject.put(Consts.MSG, "图片上传失败");
+            return jsonObject;
+        }
         if (file.isEmpty()) {
             jsonObject.put(Consts.CODE, 0);
             jsonObject.put(Consts.MSG, "文件上传失败");
@@ -47,24 +52,33 @@ public class SongController {
         }
         //文件名=当前时间（ms）+原来的文件名
         String filename = System.currentTimeMillis() + file.getOriginalFilename();
+        String picname = System.currentTimeMillis() + pic.getOriginalFilename();
         //文件路径
         String filePath = System.getProperty("user.dir") + System.getProperty("file.separator") + "song";
+        String picPath = System.getProperty("user.dir") + System.getProperty("file.separator") + "img" + System.getProperty("file.separator") + "songPic";
         //如果文件路劲不存在，新增路径
         File file1 = new File(filePath);
+        File pic1 = new File(picPath);
         if (!file1.exists()) {
             file1.mkdir();
         }
+        if (!pic1.exists()) {
+            pic1.mkdir();
+        }
         //实际的文件路径
         File dest = new File(filePath + System.getProperty("file.separator") + filename);
+        File picDest = new File(picPath + System.getProperty("file.separator") + picname);
         //存储到数据库里的相对地址文件
         String storeSongPath = "/song/" + filename;
+        String storeSongPicPath = "/img/songPic/" + picname;
         try {
             file.transferTo(dest);
+            pic.transferTo(picDest);
             Song song = new Song();
             song.setSingerId(Integer.parseInt(singerId));
             song.setName(name);
             song.setIntroduction(introduction);
-            song.setPic(pic);
+            song.setPic(storeSongPicPath);
             song.setLyric(lyric);
             song.setUrl(storeSongPath);
 //            songService.insert(song);

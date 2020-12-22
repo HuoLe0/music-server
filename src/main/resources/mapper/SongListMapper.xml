@@ -7,8 +7,8 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="pic" jdbcType="VARCHAR" property="pic"/>
-
         <result column="style" jdbcType="VARCHAR" property="style"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.huole.music.domain.SongList" extends="BaseResultMap">
@@ -16,11 +16,11 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,title,pic,style
+        id,title,pic,style,user_id
     </sql>
 
     <sql id="Blob_Column_List">
-        id,title,pic,introduction,style
+        id,title,pic,introduction,style,user_id
     </sql>
 
     <insert id="insert" parameterType="com.huole.music.domain.SongList">
@@ -61,6 +61,50 @@
         </trim>
     </insert>
 
+    <insert id="insertByConsumer" parameterType="com.huole.music.domain.SongList">
+        insert into song_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="introduction != null">
+                introduction,
+            </if>
+            <if test="style != null">
+                style,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+        </trim>
+        <trim prefix=" values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="pic != null">
+                #{pic},
+            </if>
+            <if test="introduction != null">
+                #{introduction},
+            </if>
+            <if test="style != null">
+                #{style},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+        </trim>
+    </insert>
+
     <update id="update" parameterType="com.huole.music.domain.SongList">
         update song_list
         <set>
@@ -97,6 +141,13 @@
         select
         <include refid="Blob_Column_List"/>
         from song_list
+    </select>
+
+    <select id="allConsumerSongList" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Blob_Column_List"/>
+        from song_list
+        where user_id = #{userId}
     </select>
 
     <select id="songListOfTitle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">

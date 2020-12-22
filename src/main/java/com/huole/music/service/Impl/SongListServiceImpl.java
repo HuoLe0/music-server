@@ -28,6 +28,16 @@ public class SongListServiceImpl implements SongListService {
     }
 
     /**
+     * 增加
+     *
+     * @param songList
+     */
+    @Override
+    public boolean insertByConsumer(SongList songList) {
+        return songListMapper.insertByConsumer(songList)>0;
+    }
+
+    /**
      * 修改
      *
      * @param songList
@@ -63,6 +73,16 @@ public class SongListServiceImpl implements SongListService {
     @Override
     public List<SongList> allSongList() {
         return songListMapper.allSongList();
+    }
+
+    /**
+     * 查询所有歌单
+     *
+     * @param userId
+     */
+    @Override
+    public List<SongList> allConsumerSongList(Integer userId) {
+        return songListMapper.allConsumerSongList(userId);
     }
 
     /**

@@ -57,6 +57,36 @@ public class SongListController {
     }
 
     /**
+     * 前端用户添加歌单
+     */
+    @PostMapping("/addByConsumer")
+    public Object addByConsumer(HttpServletRequest request){
+        JSONObject jsonObject = new JSONObject();
+        String title = request.getParameter("title").trim();//标题
+        String pic = request.getParameter("pic").trim();//封面
+        String introduction = request.getParameter("introduction").trim();//简介
+        String style = request.getParameter("style").trim();//风格
+        String userId = request.getParameter("userId").trim();//用户id
+
+        //保存到歌单对象中
+        SongList songList = new SongList();
+        songList.setTitle(title);
+        songList.setPic(pic);
+        songList.setIntroduction(introduction);
+        songList.setStyle(style);
+        songList.setUserId(Integer.parseInt(userId));
+        boolean flag = songListService.insertByConsumer(songList);
+        if (flag){//保存成功
+            jsonObject.put(Consts.CODE,1);
+            jsonObject.put(Consts.MSG,"添加成功");
+            return jsonObject;
+        }
+        jsonObject.put(Consts.CODE,0);
+        jsonObject.put(Consts.MSG,"添加失败");
+        return jsonObject;
+    }
+
+    /**
      * 更新歌单
      * @param request
      * @return
@@ -117,6 +147,16 @@ public class SongListController {
     @GetMapping("/allSongList")
     public Object allSongList(){
         return songListService.allSongList();
+    }
+
+    /**
+     * 查询所有歌单
+     * @return
+     */
+    @GetMapping("/allConsumerSongList")
+    public Object allConsumerSongList(HttpServletRequest request){
+        String userId = request.getParameter("userId").trim();
+        return songListService.allConsumerSongList(Integer.parseInt(userId));
     }
 
     /**

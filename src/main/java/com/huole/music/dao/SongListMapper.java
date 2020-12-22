@@ -17,6 +17,10 @@ public interface SongListMapper {
     public int insert(SongList songList);
 
     /**
+     * 增加
+     */
+    public int insertByConsumer(SongList songList);
+    /**
      * 修改
      */
     public int update(SongList songList);
@@ -35,6 +39,10 @@ public interface SongListMapper {
      * 查询所有歌单
      */
     public List<SongList> allSongList();
+    /**
+     * 查询所有歌单
+     */
+    public List<SongList> allConsumerSongList(Integer userId);
 
     /**
      * 根据标题模糊查询列表

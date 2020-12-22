@@ -16,6 +16,10 @@ public interface SongListService {
     public boolean insert(SongList songList);
 
     /**
+     * 增加
+     */
+    public boolean insertByConsumer(SongList songList);
+    /**
      * 修改
      */
     public boolean update(SongList songList);
@@ -34,6 +38,11 @@ public interface SongListService {
      * 查询所有歌单
      */
     public List<SongList> allSongList();
+
+    /**
+     * 查询所有歌单
+     */
+    public List<SongList> allConsumerSongList(Integer userId);
 
     /**
      * 根据歌单名字查询列表

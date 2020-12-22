@@ -17,6 +17,8 @@ public class SongList implements Serializable {
     private String pic;
     //风格
     private String style;
+    //用户id
+    private Integer userId;
 
     public Integer getId() {
         return id;
@@ -56,6 +58,14 @@ public class SongList implements Serializable {
 
     public void setStyle(String style) {
         this.style = style;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
 
