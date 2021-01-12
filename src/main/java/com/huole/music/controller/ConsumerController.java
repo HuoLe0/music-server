@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.huole.music.domain.Consumer;
 import com.huole.music.service.ConsumerService;
 import com.huole.music.utils.Consts;
+import com.huole.music.utils.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,7 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
         String username = request.getParameter("username").trim();//姓名
         String password = request.getParameter("password").trim();//密码
+        password = MD5Utils.code(password);
         String sex = request.getParameter("sex").trim();//性别
         String phoneNum = request.getParameter("phoneNum").trim();//电话
         String email = request.getParameter("email").trim();//邮箱
@@ -106,6 +108,7 @@ public class ConsumerController {
         String id = request.getParameter("id").trim();//id
         String username = request.getParameter("username").trim();//姓名
         String password = request.getParameter("password").trim();//密码
+        password = MD5Utils.code(password);
         String sex = request.getParameter("sex").trim();//性别
         String phoneNum = request.getParameter("phoneNum").trim();//电话
         String email = request.getParameter("email").trim();//邮箱
@@ -273,6 +276,7 @@ public class ConsumerController {
     public Object Login(HttpServletRequest request){
         String username = request.getParameter("username").trim();
         String password = request.getParameter("password").trim();
+        password = MD5Utils.code(password);
         JSONObject jsonObject = new JSONObject();
         if (username == null || username.equals("")){
             jsonObject.put(Consts.CODE,0);
