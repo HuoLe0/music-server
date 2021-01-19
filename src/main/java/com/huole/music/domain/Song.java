@@ -25,6 +25,8 @@ public class Song implements Serializable {
     private String lyric;
     //歌曲地址
     private String url;
+    //歌曲地址
+    private String mv;
 
 
     public Integer getId() {
@@ -97,6 +99,14 @@ public class Song implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getMv() {
+        return mv;
+    }
+
+    public void setMv(String mv) {
+        this.mv = mv;
     }
 }
 
