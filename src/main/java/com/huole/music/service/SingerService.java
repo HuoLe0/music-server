@@ -26,23 +26,23 @@ public interface SingerService {
     public boolean delete(Integer id);
 
     /**
-     * 根据主键查询整个对象
+     * 根据id查询歌手
      */
-    public Singer selectByPrimaryKey(Integer id);
+    public Singer selectById(Integer id);
 
     /**
      * 查询所有歌手
      */
-    public List<Singer> allSinger();
+    public List<Singer> selectAll();
 
     /**
      * 根据歌手名字模糊查询列表
      */
-    public List<Singer> singerOfName(String name);
+    public List<Singer> selectLikeName(String name);
 
     /**
      * 根据性别查询歌手
      */
-    public List<Singer> singerOfSex(Integer sex);
+    public List<Singer> selectBySex(Integer sex);
 
 }

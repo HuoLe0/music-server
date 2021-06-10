@@ -1,6 +1,6 @@
 package com.huole.music.service.Impl;
 
-import com.huole.music.dao.AdminMapper;
+import com.huole.music.dao.AdminMapper; 
 import com.huole.music.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

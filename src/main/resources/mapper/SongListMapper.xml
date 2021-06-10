@@ -9,6 +9,7 @@
         <result column="pic" jdbcType="VARCHAR" property="pic"/>
         <result column="style" jdbcType="VARCHAR" property="style"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="songs" jdbcType="VARCHAR" property="songs"/>
     </resultMap>
 
     <resultMap id="ResultMapWithBLOBs" type="com.huole.music.domain.SongList" extends="BaseResultMap">
@@ -16,11 +17,11 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,title,pic,style,user_id
+        id,title,pic,style,user_id,songs
     </sql>
 
     <sql id="Blob_Column_List">
-        id,title,pic,introduction,style,user_id
+        id,title,pic,introduction,style,user_id,songs
     </sql>
 
     <insert id="insert" parameterType="com.huole.music.domain.SongList">
@@ -60,6 +61,18 @@
             </if>
         </trim>
     </insert>
+
+    <update id="addSong" parameterType="com.huole.music.domain.SongList">
+        update song_list
+        <set>
+
+            <if test="songs != null">
+                songs = #{songs},
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
 
     <insert id="insertByConsumer" parameterType="com.huole.music.domain.SongList">
         insert into song_list
@@ -130,41 +143,47 @@
         where id=#{id}
     </delete>
 
-    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    <select id="selectById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
         select
         <include refid="Blob_Column_List"/>
         from song_list
         where id=#{id}
     </select>
 
-    <select id="allSongList" resultMap="ResultMapWithBLOBs">
+    <select id="selectAll" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Blob_Column_List"/>
         from song_list
     </select>
 
-    <select id="allConsumerSongList" resultMap="ResultMapWithBLOBs">
+    <select id="selectAllConsumer" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Blob_Column_List"/>
         from song_list
         where user_id = #{userId}
     </select>
 
-    <select id="songListOfTitle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectTen" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Blob_Column_List"/>
+        from song_list limit 10
+    </select>
+
+    <select id="selectByTitle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from song_list
-        where name = #{name}
+        where title = #{title}
     </select>
 
-    <select id="likeTitle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectLikeTitle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from song_list
         where title like CONCAT('%',#{title},'%' )
     </select>
 
-    <select id="likeStyle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectLikeStyle" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from song_list

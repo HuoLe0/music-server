@@ -1,5 +1,6 @@
 package com.huole.music.service;
 
+import com.huole.music.domain.Song;
 import com.huole.music.domain.SongList;
 
 import java.util.List;
@@ -30,32 +31,50 @@ public interface SongListService {
     public boolean delete(Integer id);
 
     /**
-     * 根据主键查询整个对象
+     * 根据id查询歌单
      */
-    public SongList selectByPrimaryKey(Integer id);
+    public SongList selectById(Integer id);
 
     /**
      * 查询所有歌单
      */
-    public List<SongList> allSongList();
+    public List<SongList> selectAll();
+    /**
+     * 查询用户所有歌单
+     */
+    public List<SongList> selectAllConsumer(Integer userId);
 
     /**
-     * 查询所有歌单
+     * 查询前十个歌单
      */
-    public List<SongList> allConsumerSongList(Integer userId);
+    public List<SongList> selectTen();
 
     /**
-     * 根据歌单名字查询列表
+     * 根据标题查询列表
      */
-    public List<SongList> songListOfTitle(String title);
+    public List<SongList> selectByTitle(String title);
 
     /**
-     * 根据歌单名字模糊查询列表
+     * 根据标题模糊查询列表
      */
-    public List<SongList> likeTitle(String title);
+    public List<SongList> selectLikeTitle(String title);
 
     /**
      * 根据风格模糊查询列表
      */
-    public List<SongList> likeStyle(String style);
+    public List<SongList> selectLikeStyle(String style);
+
+    /**
+     * 查询歌单歌曲
+     * @param songIds
+     * @return
+     */
+    List<Song> selectSongs(String[] songIds);
+
+    /**
+     * 歌单添加歌曲
+     * @param
+     * @return
+     */
+    boolean addSong(Integer songListId, Integer songId);
 }

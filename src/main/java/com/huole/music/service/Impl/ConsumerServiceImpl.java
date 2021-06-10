@@ -47,56 +47,62 @@ public class ConsumerServiceImpl implements ConsumerService {
     }
 
     /**
-     * 根据主键查询整个对象
+     * 根据id查询用户
      *
      * @param id
      */
     @Override
-    public Consumer selectByPrimaryKey(Integer id) {
-        return consumerMapper.selectByPrimaryKey(id);
+    public Consumer selectById(Integer id) {
+        return consumerMapper.selectById(id);
     }
 
     /**
      * 查询所有用户
      */
     @Override
-    public List<Consumer> allConsumer() {
-        return consumerMapper.allConsumer();
+    public List<Consumer> selectAll() {
+        return consumerMapper.selectAll();
     }
 
     /**
-     * 验证用户名密码
+     * 验证密码
      *
      * @param username
      * @param password
+     * @return
      */
     @Override
     public boolean verifyPassword(String username, String password) {
-        return consumerMapper.verifyPassword(username,password)>0;
+        return consumerMapper.verifyPassword(username, password) > 0;
     }
 
     /**
-     * 根据用户名字模糊查询列表
+     * 根据名字查询用户
      *
-     * @param name
+     * @param username
      */
     @Override
-    public List<Consumer> consumerOfName(String name) {
-        return consumerMapper.consumerOfName(name);
-    }
-
-    @Override
-    public List<Consumer> consumerLikeName(String name) {
-        return consumerMapper.consumerLikeName(name);
+    public List<Consumer> selectByName(String username) {
+        return consumerMapper.selectByName(username);
     }
 
     /**
-     * 根据歌手
+     * 根据名字模糊查询用户
+     *
+     * @param username
+     */
+    @Override
+    public List<Consumer> selectLikeName(String username) {
+        return consumerMapper.selectLikeName(username);
+    }
+
+    /**
+     * 根据用户手机号查询用户
      *
      * @param phoneNum
      */
     @Override
-    public List<Consumer> consumerOfPhoneNum(String phoneNum) {
-        return consumerMapper.consumerOfPhoneNum(phoneNum);
+    public List<Consumer> selectByPhoneNum(String phoneNum) {
+        return selectByPhoneNum(phoneNum);
     }
 }

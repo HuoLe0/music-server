@@ -121,7 +121,7 @@ public class SingerController {
     @GetMapping("/delete")
     public Object deleteSinger(HttpServletRequest request){
         String id = request.getParameter("id").trim();//主键
-        Singer singer = singerService.selectByPrimaryKey(Integer.parseInt(id));
+        Singer singer = singerService.selectById(Integer.parseInt(id));
         String url = "." + singer.getPic();
         FileSystemUtils.deleteRecursively(new File(url));
         boolean flag = singerService.delete(Integer.parseInt(id));
@@ -131,36 +131,48 @@ public class SingerController {
     /**
      * 根据主键查询整个对象
      */
-    @GetMapping("/selectByPrimaryKey")
-    public Object selectByPrimaryKey(HttpServletRequest request){
+    @GetMapping("/selectById")
+    public Object selectById(HttpServletRequest request){
         String id = request.getParameter("id").trim();//主键
-        return singerService.selectByPrimaryKey(Integer.parseInt(id));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", singerService.selectById(Integer.parseInt(id)));
+        return result;
     }
 
     /**
      * 查询所有歌手
      */
-    @GetMapping("/allSinger")
-    public Object allSinger(){
-        return singerService.allSinger();
+    @GetMapping("/selectAll")
+    public Object selectAll(){
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", singerService.selectAll());
+        return result;
     }
 
     /**
      * 根据歌手名字模糊查询列表
      */
-    @GetMapping("/singerOfName")
-    public Object singerOfName(HttpServletRequest request){
+    @GetMapping("/selectLikeName")
+    public Object selectLikeName(HttpServletRequest request){
         String name = request.getParameter("name").trim();
-        return singerService.singerOfName(name);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", singerService.selectLikeName(name));
+        return result;
     }
 
     /**
      * 根据歌手性别查询列表
      */
-    @GetMapping("/singerOfSex")
-    public Object singerOfSex(HttpServletRequest request){
+    @GetMapping("/selectBySex")
+    public Object selectBySex(HttpServletRequest request){
         String sex = request.getParameter("sex").trim();
-        return singerService.singerOfSex(Integer.parseInt(sex));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", singerService.selectBySex(Integer.parseInt(sex)));
+        return result;
     }
 
     /**
@@ -168,7 +180,7 @@ public class SingerController {
      */
     @PostMapping("/updateSingerPic")
     public Object updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
-        Singer singer = singerService.selectByPrimaryKey(id);
+        Singer singer = singerService.selectById(id);
         String url = "." + singer.getPic();
 //        System.out.println(url);
         if (!url.equals("./img/singerPic/user.jpg")){
@@ -177,6 +189,7 @@ public class SingerController {
         JSONObject jsonObject = new JSONObject();
         if (avatorFile.isEmpty()){
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"文件上传失败");
             return jsonObject;
         }
@@ -203,17 +216,20 @@ public class SingerController {
             boolean flag = singerService.update(singer);
             if (flag){//保存成功
                 jsonObject.put(Consts.CODE,1);
+                jsonObject.put("success", true);
                 jsonObject.put(Consts.MSG,"修改成功");
                 jsonObject.put("pic",storeAvatorPath);
                 return jsonObject;
             }
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"修改失败");
 
             return jsonObject;
         } catch (IOException e) {
             e.printStackTrace();
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
 
         }finally {

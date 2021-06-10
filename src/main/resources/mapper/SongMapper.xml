@@ -119,34 +119,34 @@
         where id=#{id}
     </delete>
 
-    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    <select id="selectById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
         select
         <include refid="Blob_Column_List"/>
         from song
         where id=#{id}
     </select>
 
-    <select id="allSong" resultMap="ResultMapWithBLOBs">
+    <select id="selectAll" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Blob_Column_List"/>
         from song
     </select>
 
-    <select id="songOfName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectByName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from song
         where name = #{name}
     </select>
 
-    <select id="songLikeName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectLikeName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from song
-        where name LIKE CONCAT('%',#{name},'%' )
+        where name LIKE CONCAT('%',#{name},'%')
     </select>
 
-    <select id="songOfSingerId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    <select id="selectBySingerId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
         select
         <include refid="Blob_Column_List"/>
         from song

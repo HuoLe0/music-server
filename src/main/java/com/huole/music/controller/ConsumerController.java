@@ -52,7 +52,7 @@ public class ConsumerController {
             return jsonObject;
         }
 
-        List<Consumer> consumer1 = consumerService.consumerOfName(username);
+        List<Consumer> consumer1 = consumerService.selectByName(username);
         if (!consumer1.isEmpty()){
             jsonObject.put(Consts.CODE,0);
             jsonObject.put(Consts.MSG,"用户名已存在");
@@ -155,7 +155,7 @@ public class ConsumerController {
     @GetMapping("/delete")
     public Object deleteConsumer(HttpServletRequest request){
         String id = request.getParameter("id").trim();//主键
-        Consumer consumer = consumerService.selectByPrimaryKey(Integer.parseInt(id));
+        Consumer consumer = consumerService.selectById(Integer.parseInt(id));
         String url = "." + consumer.getAvator();
         FileSystemUtils.deleteRecursively(new File(url));
         boolean flag = consumerService.delete(Integer.parseInt(id));
@@ -165,43 +165,58 @@ public class ConsumerController {
     /**
      * 根据主键查询整个对象
      */
-    @GetMapping("/selectByPrimaryKey")
-    public Object selectByPrimaryKey(HttpServletRequest request){
+    @GetMapping("/selectById")
+    public Object selectById(HttpServletRequest request){
         String id = request.getParameter("id").trim();//主键
-        return consumerService.selectByPrimaryKey(Integer.parseInt(id));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", consumerService.selectById(Integer.parseInt(id)));
+        return result;
     }
 
     /**
      * 查询所有用户
      */
-    @GetMapping("/allConsumer")
-    public Object allConsumer(){
-        return consumerService.allConsumer();
+    @GetMapping("/selectAll")
+    public Object selectAll(){
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", consumerService.selectAll());
+        return result;
     }
 
     /**
      * 根据名字模糊查询列表
      */
-    @GetMapping("/consumerOfName")
-    public Object consumerOfName(HttpServletRequest request){
+    @GetMapping("/selectByName")
+    public Object selectByName(HttpServletRequest request){
         String username = request.getParameter("username").trim();
-        return consumerService.consumerOfName(username);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", consumerService.selectByName(username));
+        return result;
     }
     /**
      * 根据名字模糊查询列表
      */
-    @GetMapping("/consumerLikeName")
-    public Object consumerLikeName(HttpServletRequest request){
+    @GetMapping("/selectLikeName")
+    public Object selectLikeName(HttpServletRequest request){
         String username = request.getParameter("username").trim();
-        return consumerService.consumerLikeName(username);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", consumerService.selectLikeName(username));
+        return result;
     }
     /**
      * 根据电话查询列表
      */
-    @GetMapping("/consumerOfPhoneNum")
-    public Object consumerOfSex(HttpServletRequest request){
+    @GetMapping("/selectByPhoneNum")
+    public Object selectByPhoneNum(HttpServletRequest request){
         String phoneNum = request.getParameter("phoneNum").trim();
-        return consumerService.consumerOfPhoneNum(phoneNum);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", consumerService.selectByPhoneNum(phoneNum));
+        return result;
     }
 
     /**
@@ -211,7 +226,10 @@ public class ConsumerController {
     public Object verifyPassword(HttpServletRequest request){
         String username = request.getParameter("username").trim();
         String password = request.getParameter("password").trim();
-        return consumerService.verifyPassword(username,password);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", consumerService.verifyPassword(username,password));
+        return result;
     }
 
     /**
@@ -219,7 +237,7 @@ public class ConsumerController {
      */
     @PostMapping("/updateConsumerAvator")
     public Object updateConsumerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
-        Consumer consumer = consumerService.selectByPrimaryKey(id);
+        Consumer consumer = consumerService.selectById(id);
         String url = "." + consumer.getAvator();
 //        System.out.println(url);
         if (!url.equals("./img/consumerAvator/user.jpg")){
@@ -228,6 +246,7 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
         if (avatorFile.isEmpty()){
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", true);
             jsonObject.put(Consts.MSG,"文件上传失败");
             return jsonObject;
         }
@@ -254,17 +273,20 @@ public class ConsumerController {
             boolean flag = consumerService.update(consumer);
             if (flag){//保存成功
                 jsonObject.put(Consts.CODE,1);
+                jsonObject.put("success", true);
                 jsonObject.put(Consts.MSG,"修改成功");
                 jsonObject.put("pic",storeAvatorPath);
                 return jsonObject;
             }
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"修改失败");
 
             return jsonObject;
         } catch (IOException e) {
             e.printStackTrace();
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
 
         }finally {
@@ -280,11 +302,13 @@ public class ConsumerController {
         JSONObject jsonObject = new JSONObject();
         if (username == null || username.equals("")){
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"用户名不能为空");
             return jsonObject;
         }
         if (password == null || password.equals("")){
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"密码不能为空");
             return jsonObject;
         }
@@ -295,11 +319,13 @@ public class ConsumerController {
         boolean flag = consumerService.verifyPassword(username,password);
         if (flag){
             jsonObject.put(Consts.CODE,1);
+            jsonObject.put("success", true);
             jsonObject.put(Consts.MSG,"登陆成功");
-            jsonObject.put("userMsg",consumerService.consumerOfName(username));
+            jsonObject.put("userMsg",consumerService.selectByName(username));
             return jsonObject;
         }
         jsonObject.put(Consts.CODE,0);
+        jsonObject.put("success",false);
         jsonObject.put(Consts.MSG,"登陆失败");
         return jsonObject;
     }

@@ -1,12 +1,16 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.SongListMapper;
+import com.huole.music.dao.SongMapper;
+import com.huole.music.domain.Song;
 import com.huole.music.domain.SongList;
 import com.huole.music.service.SongListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 歌单service实现
@@ -16,6 +20,9 @@ public class SongListServiceImpl implements SongListService {
 
     @Autowired
     private SongListMapper songListMapper;
+
+    @Autowired
+    private SongMapper songMapper;
 
     /**
      * 增加
@@ -58,51 +65,59 @@ public class SongListServiceImpl implements SongListService {
     }
 
     /**
-     * 根据主键查询整个对象
+     * 根据id查询歌单
      *
      * @param id
      */
     @Override
-    public SongList selectByPrimaryKey(Integer id) {
-        return songListMapper.selectByPrimaryKey(id);
+    public SongList selectById(Integer id) {
+        return songListMapper.selectById(id);
     }
 
     /**
      * 查询所有歌单
      */
     @Override
-    public List<SongList> allSongList() {
-        return songListMapper.allSongList();
+    public List<SongList> selectAll() {
+        return songListMapper.selectAll();
     }
 
     /**
-     * 查询所有歌单
+     * 查询用户所有歌单
      *
      * @param userId
      */
     @Override
-    public List<SongList> allConsumerSongList(Integer userId) {
-        return songListMapper.allConsumerSongList(userId);
+    public List<SongList> selectAllConsumer(Integer userId) {
+        return songListMapper.selectAllConsumer(userId);
     }
 
     /**
-     * 根据歌单名字查询列表
+     * 查询前十个歌单
+     */
+    @Override
+    public List<SongList> selectTen() {
+        return songListMapper.selectTen();
+    }
+
+    /**
+     * 根据标题查询列表
      *
      * @param title
      */
     @Override
-    public List<SongList> songListOfTitle(String title) {
-        return songListMapper.songListOfTitle(title);
+    public List<SongList> selectByTitle(String title) {
+        return songListMapper.selectByTitle(title);
     }
 
     /**
-     * 根据歌单名字模糊查询列表
+     * 根据标题模糊查询列表
      *
      * @param title
      */
     @Override
-    public List<SongList> likeTitle(String title) {
-        return songListMapper.likeTitle(title);
+    public List<SongList> selectLikeTitle(String title) {
+        return songListMapper.selectLikeTitle(title);
     }
 
     /**
@@ -111,7 +126,37 @@ public class SongListServiceImpl implements SongListService {
      * @param style
      */
     @Override
-    public List<SongList> likeStyle(String style) {
-        return songListMapper.likeStyle(style);
+    public List<SongList> selectLikeStyle(String style) {
+        return songListMapper.selectLikeStyle(style);
+    }
+
+    /**
+     * 查询歌单歌曲
+     *
+     * @param songIds
+     * @return
+     */
+    @Override
+    public List<Song> selectSongs(String[] songIds) {
+        List<Song> songs = new ArrayList<>();
+        for (String id : songIds){
+            if (id.length() > 0) {
+                songs.add(songMapper.selectById(Integer.parseInt(id)));
+            }
+        }
+        return songs;
+    }
+
+    /**
+     * 歌单添加歌曲
+     *
+     * @param
+     * @return
+     */
+    @Override
+    public boolean addSong(Integer songListId, Integer songId) {
+        String songs = songListMapper.selectById(songListId).getSongs() == null ? "" : songListMapper.selectById(songListId).getSongs();
+        songs += "," + songId.toString();
+        return songListMapper.addSong(songListId, songs) > 0;
     }
 }

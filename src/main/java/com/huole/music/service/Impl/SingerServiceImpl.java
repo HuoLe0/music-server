@@ -47,21 +47,21 @@ public class SingerServiceImpl implements SingerService {
     }
 
     /**
-     * 根据主键查询整个对象
+     * 根据id查询歌手
      *
      * @param id
      */
     @Override
-    public Singer selectByPrimaryKey(Integer id) {
-        return singerMapper.selectByPrimaryKey(id);
+    public Singer selectById(Integer id) {
+        return singerMapper.selectById(id);
     }
 
     /**
      * 查询所有歌手
      */
     @Override
-    public List<Singer> allSinger() {
-        return singerMapper.allSinger();
+    public List<Singer> selectAll() {
+        return singerMapper.selectAll();
     }
 
     /**
@@ -70,8 +70,8 @@ public class SingerServiceImpl implements SingerService {
      * @param name
      */
     @Override
-    public List<Singer> singerOfName(String name) {
-        return singerMapper.singerOfName(name);
+    public List<Singer> selectLikeName(String name) {
+        return singerMapper.selectLikeName(name);
     }
 
     /**
@@ -80,7 +80,7 @@ public class SingerServiceImpl implements SingerService {
      * @param sex
      */
     @Override
-    public List<Singer> singerOfSex(Integer sex) {
-        return singerMapper.singerOfSex(sex);
+    public List<Singer> selectBySex(Integer sex) {
+        return singerMapper.selectBySex(sex);
     }
 }

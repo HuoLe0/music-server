@@ -1,5 +1,6 @@
 package com.huole.music.dao;
 
+import com.huole.music.domain.Song;
 import com.huole.music.domain.SongList;
 import org.springframework.stereotype.Repository;
 
@@ -16,12 +17,14 @@ public interface SongListMapper {
      */
     public int insert(SongList songList);
 
+    int addSong(Integer id, String songs);
+
     /**
-     * 增加
+     * 用户自建歌单
      */
     public int insertByConsumer(SongList songList);
     /**
-     * 修改
+     * 修改歌单
      */
     public int update(SongList songList);
 
@@ -31,32 +34,44 @@ public interface SongListMapper {
     public int delete(Integer id);
 
     /**
-     * 根据主键查询整个对象
+     * 根据id查询歌单
      */
-    public SongList selectByPrimaryKey(Integer id);
+    public SongList selectById(Integer id);
 
     /**
      * 查询所有歌单
      */
-    public List<SongList> allSongList();
+    public List<SongList> selectAll();
     /**
-     * 查询所有歌单
+     * 查询用户所有歌单
      */
-    public List<SongList> allConsumerSongList(Integer userId);
+    public List<SongList> selectAllConsumer(Integer userId);
+
+    /**
+     * 查询前十个歌单
+     */
+    public List<SongList> selectTen();
 
     /**
      * 根据标题模糊查询列表
      */
-    public List<SongList> songListOfTitle(String title);
+    public List<SongList> selectByTitle(String title);
 
     /**
      * 根据标题模糊查询列表
      */
-    public List<SongList> likeTitle(String title);
+    public List<SongList> selectLikeTitle(String title);
 
     /**
      * 根据风格模糊查询列表
      */
-    public List<SongList> likeStyle(String style);
+    public List<SongList> selectLikeStyle(String style);
+
+    /**
+     * 查询歌单歌曲
+     * @param songIds
+     * @return
+     */
+    List<Song> selectSongs(List<Integer> songIds);
 
 }

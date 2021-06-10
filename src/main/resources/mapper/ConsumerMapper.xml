@@ -140,34 +140,34 @@
         where id=#{id}
     </delete>
 
-    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    <select id="selectById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
         select
         <include refid="Blob_Column_List"/>
         from consumer
         where id=#{id}
     </select>
 
-    <select id="allConsumer" resultMap="ResultMapWithBLOBs">
+    <select id="selectAll" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Blob_Column_List"/>
         from consumer
     </select>
 
-    <select id="consumerOfName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectByName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from consumer
         where username = #{username}
     </select>
 
-    <select id="consumerLikeName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectLikeName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from consumer
         where username like #{username}
     </select>
 
-    <select id="consumerOfPhoneNum" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    <select id="selectByPhoneNum" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
         from consumer

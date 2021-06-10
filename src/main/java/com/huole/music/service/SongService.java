@@ -26,28 +26,28 @@ public interface SongService {
     public boolean delete(Integer id);
 
     /**
-     * 根据主键查询整个对象
+     * 根据歌曲id查询歌曲
      */
-    public Song selectByPrimaryKey(Integer id);
+    public Song selectById(Integer id);
 
     /**
      * 查询所有歌曲
      */
-    public List<Song> allSong();
+    public List<Song> selectAll();
 
     /**
-     * 根据歌手名字查询列表
+     * 根据歌曲名字查询列表
      */
-    public List<Song> songOfName(String name);
+    public List<Song> selectByName(String name);
 
     /**
-     * 根据歌手名字模糊查询列表
+     * 根据歌曲名字模糊查询列表
      */
-    public List<Song> songLikeName(String name);
+    public List<Song> selectLikeName(String name);
 
     /**
-     * 根据歌手
+     * 根据歌手id查询列表Singer
      */
-    public List<Song> songOfSingerId(Integer singerId);
+    public List<Song> selectBySingerId(Integer singerId);
 
 }

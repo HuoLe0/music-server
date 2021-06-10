@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 歌单控制类
@@ -117,8 +118,15 @@ public class SongListController {
         return jsonObject;
     }
 
+    @GetMapping("/addSong")
+    public Object addSong(HttpServletRequest request) {
+        String songId = request.getParameter("songId").trim();//歌曲id
+        String songListId = request.getParameter("songListId").trim();//歌单id
+        boolean flag = songListService.addSong(Integer.parseInt(songId), Integer.parseInt(songListId));
+        return flag;
+    }
     /**
-     * 根据id查询歌单
+     * 根据id删除歌单
      * @param request
      * @return
      */
@@ -134,29 +142,62 @@ public class SongListController {
      * @param request
      * @return
      */
-    @GetMapping("/selectByPrimaryKey")
-    public Object selectByPrimaryKey(HttpServletRequest request){
+    @GetMapping("/selectById")
+    public Object selectById(HttpServletRequest request){
         String id = request.getParameter("id").trim();
-        return songListService.selectByPrimaryKey(Integer.parseInt(id));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectById(Integer.parseInt(id)));
+        return result;
     }
 
     /**
      * 查询所有歌单
      * @return
      */
-    @GetMapping("/allSongList")
-    public Object allSongList(){
-        return songListService.allSongList();
+    @GetMapping("/selectAll")
+    public Object selectAll(){
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectAll());
+        return result;
+    }
+
+    @GetMapping("/selectSongs")
+    public Object selectSongs(HttpServletRequest request) {
+        String songListId = request.getParameter("songListId").trim();//歌单id
+        String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+        System.out.println(songs);
+        String[] songIds = songs.split(",");
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectSongs(songIds));
+        return result;
     }
 
     /**
-     * 查询所有歌单
+     * 查询用户所有歌单
      * @return
      */
-    @GetMapping("/allConsumerSongList")
-    public Object allConsumerSongList(HttpServletRequest request){
+    @GetMapping("/selectAllConsumer")
+    public Object selectAllConsumer(HttpServletRequest request){
         String userId = request.getParameter("userId").trim();
-        return songListService.allConsumerSongList(Integer.parseInt(userId));
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectAllConsumer(Integer.parseInt(userId)));
+        return result;
+    }
+
+    /**
+     * 查询前十个歌单
+     * @return
+     */
+    @GetMapping("/selectTen")
+    public Object selectTen(){
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectTen());
+        return result;
     }
 
     /**
@@ -164,10 +205,13 @@ public class SongListController {
      * @param request
      * @return
      */
-    @GetMapping("/songListOfTitle")
-    public Object songListOfTitle(HttpServletRequest request){
+    @GetMapping("/selectByTitle")
+    public Object selectByTitle(HttpServletRequest request){
         String title = request.getParameter("title").trim();
-        return songListService.songListOfTitle(title);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectByTitle(title));
+        return result;
     }
 
     /**
@@ -175,10 +219,13 @@ public class SongListController {
      * @param request
      * @return
      */
-    @GetMapping("/likeTitle")
-    public Object likeTitle(HttpServletRequest request){
+    @GetMapping("/selectLikeTitle")
+    public Object selectLikeTitle(HttpServletRequest request){
         String title = request.getParameter("title").trim();
-        return songListService.likeTitle(title);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectLikeTitle(title));
+        return result;
     }
 
     /**
@@ -186,10 +233,13 @@ public class SongListController {
      * @param request
      * @return
      */
-    @GetMapping("/likeStyle")
-    public Object likeStyle(HttpServletRequest request){
+    @GetMapping("/selectLikeStyle")
+    public Object selectLikeStyle(HttpServletRequest request){
         String style = request.getParameter("style").trim();
-        return songListService.likeStyle(style);
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectLikeStyle(style));
+        return result;
     }
 
 
@@ -198,7 +248,7 @@ public class SongListController {
      */
     @PostMapping("/updateSongListPic")
     public Object updateSongListPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
-        SongList songList = songListService.selectByPrimaryKey(id);
+        SongList songList = songListService.selectById(id);
         String pic = "." + songList.getPic();
 //        System.out.println(url);
         if (!pic.equals("./img/songListPic/list.jpg")){
@@ -207,6 +257,7 @@ public class SongListController {
         JSONObject jsonObject = new JSONObject();
         if (avatorFile.isEmpty()){
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"文件上传失败");
             return jsonObject;
         }
@@ -232,17 +283,20 @@ public class SongListController {
             boolean flag = songListService.update(songList);
             if (flag){//保存成功
                 jsonObject.put(Consts.CODE,1);
+                jsonObject.put("success", true);
                 jsonObject.put(Consts.MSG,"修改成功");
                 jsonObject.put("pic",storeAvatorPath);
                 return jsonObject;
             }
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"修改失败");
 
             return jsonObject;
         } catch (IOException e) {
             e.printStackTrace();
             jsonObject.put(Consts.CODE,0);
+            jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
 
         }finally {

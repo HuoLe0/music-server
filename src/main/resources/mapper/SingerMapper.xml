@@ -100,27 +100,27 @@
         where id=#{id}
     </delete>
 
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from singer
         where id = #{id}
     </select>
 
-    <select id="allSinger" resultMap="BaseResultMap">
+    <select id="selectAll" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from singer
     </select>
 
-    <select id="singerOfName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    <select id="selectLikeName" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
         from singer
-        where name like #{name}
+        where name like CONCAT('%',#{name},'%')
     </select>
 
-    <select id="singerOfSex" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="selectBySex" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
         from singer

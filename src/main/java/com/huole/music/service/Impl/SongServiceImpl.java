@@ -47,50 +47,50 @@ public class SongServiceImpl implements SongService {
     }
 
     /**
-     * 根据主键查询整个对象
+     * 根据歌曲id查询歌曲
      *
      * @param id
      */
     @Override
-    public Song selectByPrimaryKey(Integer id) {
-        return songMapper.selectByPrimaryKey(id);
+    public Song selectById(Integer id) {
+        return songMapper.selectById(id);
     }
 
     /**
      * 查询所有歌曲
      */
     @Override
-    public List<Song> allSong() {
-        return songMapper.allSong();
+    public List<Song> selectAll() {
+        return songMapper.selectAll();
     }
 
     /**
-     * 根据歌手名字查询列表
+     * 根据歌曲名字查询列表
      *
      * @param name
      */
     @Override
-    public List<Song> songOfName(String name) {
-        return songMapper.songOfName(name);
+    public List<Song> selectByName(String name) {
+        return songMapper.selectByName(name);
     }
 
     /**
-     * 根据歌手名字模糊查询列表
+     * 根据歌曲名字模糊查询列表
      *
      * @param name
      */
     @Override
-    public List<Song> songLikeName(String name) {
-        return songMapper.songLikeName(name);
+    public List<Song> selectLikeName(String name) {
+        return songMapper.selectLikeName(name);
     }
 
     /**
-     * 根据歌手
+     * 根据歌手id查询列表Singer
      *
-     * @param
+     * @param singerId
      */
     @Override
-    public List<Song> songOfSingerId(Integer singerId) {
-        return songMapper.songOfSingerId(singerId);
+    public List<Song> selectBySingerId(Integer singerId) {
+        return songMapper.selectBySingerId(singerId);
     }
 }

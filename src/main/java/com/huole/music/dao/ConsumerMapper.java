@@ -27,14 +27,14 @@ public interface ConsumerMapper {
     public int delete(Integer id);
 
     /**
-     * 根据主键查询整个对象
+     * 根据id查询用户
      */
-    public Consumer selectByPrimaryKey(Integer id);
+    public Consumer selectById(Integer id);
 
     /**
      * 查询所有用户
      */
-    public List<Consumer> allConsumer();
+    public List<Consumer> selectAll();
 
     /**
      * 验证密码
@@ -43,17 +43,20 @@ public interface ConsumerMapper {
      * @return
      */
     public int verifyPassword(String username, String password);
-    /**
-     * 根据名字模糊查询列表
-     */
-    public List<Consumer> consumerOfName(String username);
-
-
-    public List<Consumer> consumerLikeName(String username);
 
     /**
-     * 根据歌s手id查询列表Singer
+     * 根据名字查询用户
      */
-    public List<Consumer> consumerOfPhoneNum(String phoneNum);
+    public List<Consumer> selectByName(String username);
+
+    /**
+     * 根据名字模糊查询用户
+     */
+    public List<Consumer> selectLikeName(String username);
+
+    /**
+     * 根据用户手机号查询用户
+     */
+    public List<Consumer> selectByPhoneNum(String phoneNum);
 
 }
