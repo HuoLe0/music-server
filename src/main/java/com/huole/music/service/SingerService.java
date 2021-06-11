@@ -36,6 +36,12 @@ public interface SingerService {
     public List<Singer> selectAll();
 
     /**
+     * 查询前十个歌手
+     * @return
+     */
+    public List<Singer> selectTen();
+
+    /**
      * 根据歌手名字模糊查询列表
      */
     public List<Singer> selectLikeName(String name);

@@ -152,6 +152,18 @@ public class SingerController {
     }
 
     /**
+     * 查询前十个歌手
+     * @return
+     */
+    @GetMapping("/selectTen")
+    public Object selectTen(){
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", singerService.selectTen());
+        return result;
+    }
+
+    /**
      * 根据歌手名字模糊查询列表
      */
     @GetMapping("/selectLikeName")

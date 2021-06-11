@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 歌曲管理controller
@@ -187,6 +189,27 @@ public class SongController {
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", songService.selectById(Integer.parseInt(id)));
+        return result;
+    }
+
+    /**
+     * 查询随机20收歌曲
+     * @return
+     */
+    @GetMapping("/selectRandom")
+    public Object selectRandom(HttpServletRequest request){
+        Integer num = Integer.parseInt(request.getParameter("num").trim());
+        List<Song> songs = new ArrayList<>();
+        Integer totalNum = songService.selectAll().size();
+        for (int i = 0; i < num; i++){
+            Integer id = (int) (Math.random()) * totalNum;
+
+            songs.add(songService.selectById(id));
+
+        }
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songs);
         return result;
     }
 

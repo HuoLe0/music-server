@@ -65,6 +65,16 @@ public class SingerServiceImpl implements SingerService {
     }
 
     /**
+     * 查询前十个歌手
+     *
+     * @return
+     */
+    @Override
+    public List<Singer> selectTen() {
+        return singerMapper.selectTen();
+    }
+
+    /**
      * 根据歌手名字模糊查询列表
      *
      * @param name

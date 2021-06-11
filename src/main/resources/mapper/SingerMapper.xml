@@ -113,6 +113,12 @@
         from singer
     </select>
 
+    <select id="selectTen" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from singer limit 10
+    </select>
+
     <select id="selectLikeName" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>
