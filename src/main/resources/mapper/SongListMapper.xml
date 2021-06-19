@@ -156,6 +156,12 @@
         from song_list
     </select>
 
+    <select id="selectAllId" resultType="java.lang.Integer">
+        select
+        id
+        from song_list
+    </select>
+
     <select id="selectAllConsumer" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Blob_Column_List"/>

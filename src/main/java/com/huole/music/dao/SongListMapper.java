@@ -42,6 +42,8 @@ public interface SongListMapper {
      * 查询所有歌单
      */
     public List<SongList> selectAll();
+
+    public List<Integer> selectAllId();
     /**
      * 查询用户所有歌单
      */

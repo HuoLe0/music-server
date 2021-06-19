@@ -64,6 +64,11 @@ public class SongServiceImpl implements SongService {
         return songMapper.selectAll();
     }
 
+    @Override
+    public List<Integer> selectAllId() {
+        return songMapper.selectAllId();
+    }
+
     /**
      * 根据歌曲名字查询列表
      *

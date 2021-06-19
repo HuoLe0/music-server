@@ -39,6 +39,8 @@ public interface SongListService {
      * 查询所有歌单
      */
     public List<SongList> selectAll();
+
+    public List<Integer> selectAllId();
     /**
      * 查询用户所有歌单
      */
@@ -73,8 +75,11 @@ public interface SongListService {
 
     /**
      * 歌单添加歌曲
-     * @param
-     * @return
      */
     boolean addSong(Integer songListId, Integer songId);
+
+    /**
+     * 歌单删除歌曲
+     */
+    boolean deleteSong(Integer songListId, Integer songId);
 }

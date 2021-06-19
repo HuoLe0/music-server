@@ -18,7 +18,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 歌单控制类
@@ -118,12 +120,40 @@ public class SongListController {
         return jsonObject;
     }
 
-    @GetMapping("/addSong")
+    @PostMapping("/addSong")
     public Object addSong(HttpServletRequest request) {
         String songId = request.getParameter("songId").trim();//歌曲id
         String songListId = request.getParameter("songListId").trim();//歌单id
-        boolean flag = songListService.addSong(Integer.parseInt(songId), Integer.parseInt(songListId));
-        return flag;
+        String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+        JSONObject result = new JSONObject();
+        if (songs.matches(".*," + songId + ",.*")){
+            result.put("success", false);
+            result.put("message", "歌曲已存在！");
+            return result;
+        }else {
+            boolean flag = songListService.addSong(Integer.parseInt(songListId), Integer.parseInt(songId));
+            result.put("success", flag);
+            result.put("message", "添加成功！");
+        }
+        return result;
+    }
+
+    @GetMapping("/deleteSong")
+    public Object deleteSong(HttpServletRequest request) {
+        String songId = request.getParameter("songId").trim();//歌曲id
+        String songListId = request.getParameter("songListId").trim();//歌单id
+        String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+        JSONObject result = new JSONObject();
+        if (!songs.matches(".*," + songId + ",.*")){
+            result.put("success", false);
+            result.put("message", "歌曲不存在！");
+            return result;
+        }else {
+            boolean flag = songListService.deleteSong(Integer.parseInt(songListId), Integer.parseInt(songId));
+            result.put("success", flag);
+            result.put("message", "删除成功！");
+        }
+        return result;
     }
     /**
      * 根据id删除歌单
@@ -160,6 +190,28 @@ public class SongListController {
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", songListService.selectAll());
+        return result;
+    }
+
+    /**
+     * 查询随机20收歌曲
+     * @return
+     */
+    @GetMapping("/selectRandom")
+    public Object selectRandom(HttpServletRequest request){
+        Integer num = request.getParameter("num") == null ? 10 : Integer.parseInt(request.getParameter("num").trim());
+        Integer n = num == null ? 10 : num;
+        Set<SongList> songLists = new HashSet<>();
+        List<Integer> songIds = songListService.selectAllId();
+        System.out.println(songLists);
+        Integer totalNum = songIds.size();
+        for (int i = 0; i < n; i++){
+            Integer id = songIds.get((int) (Math.random() * totalNum));
+            songLists.add(songListService.selectById(id));
+        }
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songLists);
         return result;
     }
 

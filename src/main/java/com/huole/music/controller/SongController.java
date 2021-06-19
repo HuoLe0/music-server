@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 歌曲管理controller
@@ -198,14 +200,14 @@ public class SongController {
      */
     @GetMapping("/selectRandom")
     public Object selectRandom(HttpServletRequest request){
-        Integer num = Integer.parseInt(request.getParameter("num").trim());
-        List<Song> songs = new ArrayList<>();
-        Integer totalNum = songService.selectAll().size();
-        for (int i = 0; i < num; i++){
-            Integer id = (int) (Math.random()) * totalNum;
-
+        Integer num = request.getParameter("num") == null ? 20 : Integer.parseInt(request.getParameter("num").trim());
+        Integer n = num == null ? 20 : num;
+        Set<Song> songs = new HashSet<>();
+        List<Integer> songIds = songService.selectAllId();
+        Integer totalNum = songIds.size();
+        for (int i = 0; i < n; i++){
+            Integer id = songIds.get((int) (Math.random() * totalNum));
             songs.add(songService.selectById(id));
-
         }
         JSONObject result = new JSONObject();
         result.put("success", true);

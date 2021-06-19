@@ -82,6 +82,11 @@ public class SongListServiceImpl implements SongListService {
         return songListMapper.selectAll();
     }
 
+    @Override
+    public List<Integer> selectAllId() {
+        return songListMapper.selectAllId();
+    }
+
     /**
      * 查询用户所有歌单
      *
@@ -157,6 +162,19 @@ public class SongListServiceImpl implements SongListService {
     public boolean addSong(Integer songListId, Integer songId) {
         String songs = songListMapper.selectById(songListId).getSongs() == null ? "" : songListMapper.selectById(songListId).getSongs();
         songs += "," + songId.toString();
+        return songListMapper.addSong(songListId, songs) > 0;
+    }
+
+    /**
+     * 歌单删除歌曲
+     *
+     * @param songListId
+     * @param songId
+     */
+    @Override
+    public boolean deleteSong(Integer songListId, Integer songId) {
+        String songs = songListMapper.selectById(songListId).getSongs();
+        songs = songs.replace(","+songId.toString(), "");
         return songListMapper.addSong(songListId, songs) > 0;
     }
 }

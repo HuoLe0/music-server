@@ -35,6 +35,8 @@ public interface SongService {
      */
     public List<Song> selectAll();
 
+    public List<Integer> selectAllId();
+
     /**
      * 根据歌曲名字查询列表
      */

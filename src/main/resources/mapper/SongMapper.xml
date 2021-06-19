@@ -132,6 +132,12 @@
         from song
     </select>
 
+    <select id="selectAllId" resultType="java.lang.Integer">
+        select
+        id
+        from song
+    </select>
+
     <select id="selectByName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
