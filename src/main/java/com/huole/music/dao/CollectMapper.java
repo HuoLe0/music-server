@@ -32,12 +32,12 @@ public interface CollectMapper {
     /**
      * 查询所有收藏
      */
-    public List<Collect> allCollect();
+    public List<Collect> selectAll();
 
     /**
      * 查询某个用户下的所有收藏
      */
-    public List<Collect> collectOfUserId(Integer userId);
+    public List<Collect> selectByUserId(Integer userId);
 
     /**
      * 查询某个用户下的是否收藏某个歌曲

@@ -128,18 +128,18 @@ public class CollectController {
     /**
      * 查询所有收藏
      */
-    @GetMapping("/allCollect")
-    public Object allCollect(){
-        return collectService.allCollect();
+    @GetMapping("/selectAll")
+    public Object selectAll(){
+        return collectService.selectAll();
     }
 
     /**
      * 根据收藏名字模糊查询列表
      */
-    @GetMapping("/collectOfUserId")
-    public Object collectOfSongId(HttpServletRequest request){
+    @GetMapping("/selectByUserId")
+    public Object selectByUserId(HttpServletRequest request){
         String userId = request.getParameter("userId").trim();
-        return collectService.collectOfUserId(Integer.parseInt(userId));
+        return collectService.selectByUserId(Integer.parseInt(userId));
     }
 
 }

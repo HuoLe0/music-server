@@ -1,11 +1,14 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.CollectMapper;
+import com.huole.music.dao.SongMapper;
 import com.huole.music.domain.Collect;
+import com.huole.music.domain.Song;
 import com.huole.music.service.CollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +19,9 @@ public class CollectServiceImpl implements CollectService {
 
     @Autowired
     private CollectMapper collectMapper;
+
+    @Autowired
+    private SongMapper songMapper;
     /**
      * 增加
      *
@@ -55,8 +61,8 @@ public class CollectServiceImpl implements CollectService {
      * 查询所有收藏
      */
     @Override
-    public List<Collect> allCollect() {
-        return collectMapper.allCollect();
+    public List<Collect> selectAll() {
+        return collectMapper.selectAll();
     }
 
     /**
@@ -65,8 +71,13 @@ public class CollectServiceImpl implements CollectService {
      * @param userId
      */
     @Override
-    public List<Collect> collectOfUserId(Integer userId) {
-        return collectMapper.collectOfUserId(userId);
+    public List<Song> selectByUserId(Integer userId) {
+        List<Collect> collectList = collectMapper.selectByUserId(userId);
+        List<Song> songList = new ArrayList<>();
+        for(Collect collect : collectList){
+            songList.add(songMapper.selectById(collect.getSongId()));
+        }
+        return songList;
     }
 
     /**
