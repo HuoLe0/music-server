@@ -136,10 +136,14 @@
         where name like CONCAT('%',#{name},'%')
     </select>
 
-    <select id="selectBySex" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="selectBySex" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from singer
-        where sex = #{sex}
+        where sex = #{sex} limit #{page},#{size}
+    </select>
+
+    <select id="countSex" resultType="long">
+        select count(1) from singer where sex = #{sex}
     </select>
 </mapper>

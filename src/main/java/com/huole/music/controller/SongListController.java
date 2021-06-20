@@ -194,6 +194,20 @@ public class SongListController {
     }
 
     /**
+     * 查询所有歌单--分页
+     * @return
+     */
+    @GetMapping("/selectByPager")
+    public Object selectByPager(HttpServletRequest request){
+        String page = request.getParameter("page").trim();
+        String size = request.getParameter("size").trim();
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songListService.selectByPager(Integer.parseInt(page), Integer.parseInt(size)));
+        return result;
+    }
+
+    /**
      * 查询随机20收歌曲
      * @return
      */
@@ -288,9 +302,11 @@ public class SongListController {
     @GetMapping("/selectLikeStyle")
     public Object selectLikeStyle(HttpServletRequest request){
         String style = request.getParameter("style").trim();
+        String page = request.getParameter("page").trim();
+        String size = request.getParameter("size").trim();
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songListService.selectLikeStyle(style));
+        result.put("data", songListService.selectLikeStyle(style, Integer.parseInt(page), Integer.parseInt(size)));
         return result;
     }
 

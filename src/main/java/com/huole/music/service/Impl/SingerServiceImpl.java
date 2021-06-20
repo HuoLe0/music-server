@@ -4,6 +4,7 @@ import com.huole.music.dao.SingerMapper;
 import com.huole.music.domain.Pager;
 import com.huole.music.domain.Singer;
 import com.huole.music.domain.Song;
+import com.huole.music.domain.SongList;
 import com.huole.music.service.SingerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,7 +108,15 @@ public class SingerServiceImpl implements SingerService {
      * @param sex
      */
     @Override
-    public List<Singer> selectBySex(Integer sex) {
-        return singerMapper.selectBySex(sex);
+    public Pager<Singer> selectBySex(Integer sex, Integer page, Integer size) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("sex", sex);
+        params.put("page", (page-1)*size);
+        params.put("size", size);
+        Pager<Singer> pager = new Pager<Singer>();
+        List<Singer> list = singerMapper.selectBySex(params);
+        pager.setRows(list);
+        pager.setTotal(singerMapper.countSex(sex));
+        return pager;
     }
 }

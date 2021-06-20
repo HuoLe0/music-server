@@ -1,5 +1,6 @@
 package com.huole.music.dao;
 
+import com.huole.music.domain.Pager;
 import com.huole.music.domain.Singer;
 import com.huole.music.domain.Song;
 import org.springframework.stereotype.Repository;
@@ -56,5 +57,7 @@ public interface SingerMapper {
     /**
      * 根据性别查询歌手
      */
-    public List<Singer> selectBySex(Integer sex);
+    public List<Singer> selectBySex(Map<String, Object> params);
+
+    public long countSex(Integer sex);
 }

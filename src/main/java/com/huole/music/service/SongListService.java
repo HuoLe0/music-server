@@ -1,5 +1,6 @@
 package com.huole.music.service;
 
+import com.huole.music.domain.Pager;
 import com.huole.music.domain.Song;
 import com.huole.music.domain.SongList;
 
@@ -40,6 +41,8 @@ public interface SongListService {
      */
     public List<SongList> selectAll();
 
+    public Pager<SongList> selectByPager(Integer page, Integer size);
+
     public List<Integer> selectAllId();
     /**
      * 查询用户所有歌单
@@ -64,7 +67,7 @@ public interface SongListService {
     /**
      * 根据风格模糊查询列表
      */
-    public List<SongList> selectLikeStyle(String style);
+    public Pager<SongList> selectLikeStyle(String style, Integer page, Integer size);
 
     /**
      * 查询歌单歌曲

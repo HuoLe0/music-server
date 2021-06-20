@@ -53,6 +53,6 @@ public interface SingerService {
     /**
      * 根据性别查询歌手
      */
-    public List<Singer> selectBySex(Integer sex);
+    public Pager<Singer> selectBySex(Integer sex, Integer page, Integer size);
 
 }

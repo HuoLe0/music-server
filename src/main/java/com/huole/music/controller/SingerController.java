@@ -195,9 +195,11 @@ public class SingerController {
     @GetMapping("/selectBySex")
     public Object selectBySex(HttpServletRequest request){
         String sex = request.getParameter("sex").trim();
+        String page = request.getParameter("page").trim();
+        String size = request.getParameter("size").trim();
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", singerService.selectBySex(Integer.parseInt(sex)));
+        result.put("data", singerService.selectBySex(Integer.parseInt(sex), Integer.parseInt(page), Integer.parseInt(size)));
         return result;
     }
 

@@ -2,15 +2,14 @@ package com.huole.music.service.Impl;
 
 import com.huole.music.dao.SongListMapper;
 import com.huole.music.dao.SongMapper;
+import com.huole.music.domain.Pager;
 import com.huole.music.domain.Song;
 import com.huole.music.domain.SongList;
 import com.huole.music.service.SongListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 歌单service实现
@@ -83,6 +82,18 @@ public class SongListServiceImpl implements SongListService {
     }
 
     @Override
+    public Pager<SongList> selectByPager(Integer page, Integer size) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("page", (page-1)*size);
+        params.put("size", size);
+        Pager<SongList> pager = new Pager<SongList>();
+        List<SongList> list = songListMapper.selectByPager(params);
+        pager.setRows(list);
+        pager.setTotal(songListMapper.count());
+        return pager;
+    }
+
+    @Override
     public List<Integer> selectAllId() {
         return songListMapper.selectAllId();
     }
@@ -131,8 +142,16 @@ public class SongListServiceImpl implements SongListService {
      * @param style
      */
     @Override
-    public List<SongList> selectLikeStyle(String style) {
-        return songListMapper.selectLikeStyle(style);
+    public Pager<SongList> selectLikeStyle(String style, Integer page, Integer size) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("style", style);
+        params.put("page", (page-1)*size);
+        params.put("size", size);
+        Pager<SongList> pager = new Pager<SongList>();
+        List<SongList> list = songListMapper.selectLikeStyle(params);
+        pager.setRows(list);
+        pager.setTotal(songListMapper.countStyle(style));
+        return pager;
     }
 
     /**
