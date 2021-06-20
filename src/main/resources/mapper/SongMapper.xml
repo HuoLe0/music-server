@@ -138,6 +138,16 @@
         from song
     </select>
 
+    <select id="selectByPager" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Blob_Column_List"/>
+        from song limit #{page},#{size}
+    </select>
+
+    <select id="count" resultType="long">
+        select count(1) from song
+    </select>
+
     <select id="selectByName" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
         select
         <include refid="Blob_Column_List"/>
@@ -152,11 +162,15 @@
         where name LIKE CONCAT('%',#{name},'%')
     </select>
 
-    <select id="selectBySingerId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+    <select id="selectBySingerId" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Blob_Column_List"/>
         from song
-        where singer_id = #{singerId}
+        where singer_id = #{singerId} limit #{page},#{size}
+    </select>
+
+    <select id="countSingerSong" resultType="long">
+        select count(1) from song where singer_id = #{singerId}
     </select>
 
 </mapper>

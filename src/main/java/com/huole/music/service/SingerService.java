@@ -1,6 +1,8 @@
 package com.huole.music.service;
 
+import com.huole.music.domain.Pager;
 import com.huole.music.domain.Singer;
+import com.huole.music.domain.Song;
 
 import java.util.List;
 
@@ -34,6 +36,8 @@ public interface SingerService {
      * 查询所有歌手
      */
     public List<Singer> selectAll();
+
+    public Pager<Singer> selectByPager(Integer page, Integer size);
 
     /**
      * 查询前十个歌手

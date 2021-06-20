@@ -1,9 +1,11 @@
 package com.huole.music.dao;
 
 import com.huole.music.domain.Singer;
+import com.huole.music.domain.Song;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 歌手Dao
@@ -35,6 +37,10 @@ public interface SingerMapper {
      * 查询所有歌手
      */
     public List<Singer> selectAll();
+
+    public List<Singer> selectByPager(Map<String, Object> params);
+
+    public long count();
 
     /**
      * 查询前十个歌手

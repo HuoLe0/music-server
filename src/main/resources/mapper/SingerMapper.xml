@@ -113,6 +113,16 @@
         from singer
     </select>
 
+    <select id="selectByPager" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from singer limit #{page},#{size}
+    </select>
+
+    <select id="count" resultType="long">
+        select count(1) from singer
+    </select>
+
     <select id="selectTen" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

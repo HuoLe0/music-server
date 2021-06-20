@@ -2,6 +2,7 @@ package com.huole.music.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * 歌曲
@@ -108,5 +109,20 @@ public class Song implements Serializable {
     public void setMv(String mv) {
         this.mv = mv;
     }
+
+
+    @Override
+    public int hashCode() {
+        String songName = name;
+        return songName.hashCode();
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        Song song = (Song) obj;
+        return song.getName() == this.getName();
+    }
+
 }
 

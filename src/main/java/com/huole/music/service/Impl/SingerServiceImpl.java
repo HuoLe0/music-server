@@ -1,11 +1,16 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.SingerMapper;
+import com.huole.music.domain.Pager;
 import com.huole.music.domain.Singer;
+import com.huole.music.domain.Song;
 import com.huole.music.service.SingerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 歌手Service实现类
@@ -62,6 +67,18 @@ public class SingerServiceImpl implements SingerService {
     @Override
     public List<Singer> selectAll() {
         return singerMapper.selectAll();
+    }
+
+    @Override
+    public Pager<Singer> selectByPager(Integer page, Integer size) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("page", (page-1)*size);
+        params.put("size", size);
+        Pager<Singer> pager = new Pager<Singer>();
+        List<Singer> list = singerMapper.selectByPager(params);
+        pager.setRows(list);
+        pager.setTotal(singerMapper.count());
+        return pager;
     }
 
     /**

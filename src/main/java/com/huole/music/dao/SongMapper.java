@@ -4,6 +4,7 @@ import com.huole.music.domain.Song;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 歌曲Dao
@@ -38,6 +39,10 @@ public interface SongMapper {
 
     public List<Integer> selectAllId();
 
+    public List<Song> selectByPager(Map<String, Object> params);
+
+    public long count();
+
     /**
      * 根据歌曲名字查询列表
      */
@@ -51,6 +56,8 @@ public interface SongMapper {
     /**
      * 根据歌手id查询列表Singer
      */
-    public List<Song> selectBySingerId(Integer singerId);
+    public List<Song> selectBySingerId(Map<String, Object> params);
+
+    public long countSingerSong(Integer singerId);
 
 }

@@ -1,12 +1,15 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.SongMapper;
+import com.huole.music.domain.Pager;
 import com.huole.music.domain.Song;
 import com.huole.music.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 歌曲service实现
@@ -69,6 +72,18 @@ public class SongServiceImpl implements SongService {
         return songMapper.selectAllId();
     }
 
+    @Override
+    public Pager<Song> selectByPager(Integer page, Integer size) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("page", (page-1)*size);
+        params.put("size", size);
+        Pager<Song> pager = new Pager<Song>();
+        List<Song> list = songMapper.selectByPager(params);
+        pager.setRows(list);
+        pager.setTotal(songMapper.count());
+        return pager;
+    }
+
     /**
      * 根据歌曲名字查询列表
      *
@@ -95,7 +110,15 @@ public class SongServiceImpl implements SongService {
      * @param singerId
      */
     @Override
-    public List<Song> selectBySingerId(Integer singerId) {
-        return songMapper.selectBySingerId(singerId);
+    public Pager<Song> selectBySingerId(Integer singerId, Integer page, Integer size) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("singerId", singerId);
+        params.put("page", (page-1)*size);
+        params.put("size", size);
+        Pager<Song> pager = new Pager<Song>();
+        List<Song> list = songMapper.selectBySingerId(params);
+        pager.setRows(list);
+        pager.setTotal(songMapper.countSingerSong(singerId));
+        return pager;
     }
 }

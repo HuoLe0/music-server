@@ -152,6 +152,20 @@ public class SingerController {
     }
 
     /**
+     * 查询所有歌手--分页
+     * @return
+     */
+    @GetMapping("/selectByPager")
+    public Object selectByPager(HttpServletRequest request){
+        String page = request.getParameter("page").trim();
+        String size = request.getParameter("size").trim();
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", singerService.selectByPager(Integer.parseInt(page), Integer.parseInt(size)));
+        return result;
+    }
+
+    /**
      * 查询前十个歌手
      * @return
      */

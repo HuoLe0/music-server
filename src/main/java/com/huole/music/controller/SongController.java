@@ -159,6 +159,20 @@ public class SongController {
         return result;
     }
 
+    /**
+     * 查询所有歌曲--分页
+     * @return
+     */
+    @GetMapping("/selectByPager")
+    public Object selectByPager(HttpServletRequest request){
+        String page = request.getParameter("page").trim();
+        String size = request.getParameter("size").trim();
+        JSONObject result = new JSONObject();
+        result.put("success", true);
+        result.put("data", songService.selectByPager(Integer.parseInt(page), Integer.parseInt(size)));
+        return result;
+    }
+
     /**\
      * 根据id删除歌曲
      * @param request
@@ -201,13 +215,18 @@ public class SongController {
     @GetMapping("/selectRandom")
     public Object selectRandom(HttpServletRequest request){
         Integer num = request.getParameter("num") == null ? 20 : Integer.parseInt(request.getParameter("num").trim());
-        Integer n = num == null ? 20 : num;
         Set<Song> songs = new HashSet<>();
         List<Integer> songIds = songService.selectAllId();
+        Set<Integer> songId = new HashSet<>();
         Integer totalNum = songIds.size();
-        for (int i = 0; i < n; i++){
+        for (int i = 0; i < num; i++){
             Integer id = songIds.get((int) (Math.random() * totalNum));
-            songs.add(songService.selectById(id));
+            if (!songId.contains(id)){
+                songId.add(id);
+            }
+        }
+        for (Integer ID : songId){
+            songs.add(songService.selectById(ID));
         }
         JSONObject result = new JSONObject();
         result.put("success", true);
@@ -245,9 +264,11 @@ public class SongController {
     @GetMapping("/selectBySingerId")
     public Object selectBySingerId(HttpServletRequest request){
         String singerId = request.getParameter("singerId");
+        String page = request.getParameter("page").trim();
+        String size = request.getParameter("size").trim();
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songService.selectBySingerId(Integer.parseInt(singerId)));
+        result.put("data", songService.selectBySingerId(Integer.parseInt(singerId), Integer.parseInt(page), Integer.parseInt(size)));
         return result;
     }
 

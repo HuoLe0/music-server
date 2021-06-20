@@ -1,5 +1,6 @@
 package com.huole.music.service;
 
+import com.huole.music.domain.Pager;
 import com.huole.music.domain.Song;
 
 import java.util.List;
@@ -37,6 +38,8 @@ public interface SongService {
 
     public List<Integer> selectAllId();
 
+    public Pager<Song> selectByPager(Integer page, Integer size);
+
     /**
      * 根据歌曲名字查询列表
      */
@@ -50,6 +53,6 @@ public interface SongService {
     /**
      * 根据歌手id查询列表Singer
      */
-    public List<Song> selectBySingerId(Integer singerId);
+    public Pager<Song> selectBySingerId(Integer singerId, Integer page, Integer size);
 
 }
