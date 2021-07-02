@@ -142,16 +142,24 @@ public class SongListController {
     public Object deleteSong(HttpServletRequest request) {
         String songId = request.getParameter("songId").trim();//歌曲id
         String songListId = request.getParameter("songListId").trim();//歌单id
-        String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+        String creatorId = request.getParameter("creatorId").trim();//歌单创建者id
+        String userId = request.getParameter("userId").trim();//当前登录用户id
         JSONObject result = new JSONObject();
-        if (!songs.matches(".*," + songId + ",.*")){
-            result.put("success", false);
-            result.put("message", "歌曲不存在！");
-            return result;
+        if (creatorId.equals(userId)){
+            String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+            if (!songs.matches(".*," + songId + ",.*")){
+                result.put("success", false);
+                result.put("message", "歌曲不存在！");
+                return result;
+            }else {
+                boolean flag = songListService.deleteSong(Integer.parseInt(songListId), Integer.parseInt(songId));
+                result.put("success", flag);
+                result.put("message", "删除成功！");
+            }
         }else {
-            boolean flag = songListService.deleteSong(Integer.parseInt(songListId), Integer.parseInt(songId));
-            result.put("success", flag);
-            result.put("message", "删除成功！");
+            result.put("success", false);
+            result.put("message", "你没有权限！");
+            return result;
         }
         return result;
     }

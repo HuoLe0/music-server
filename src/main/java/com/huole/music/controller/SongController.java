@@ -7,12 +7,14 @@ import com.huole.music.domain.Song;
 import com.huole.music.domain.Song;
 import com.huole.music.service.SongService;
 import com.huole.music.utils.Consts;
+import com.huole.music.utils.RedisUtil;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +29,9 @@ import java.util.Set;
 @RestController
 @RequestMapping("/song")
 public class SongController {
+
+    @Resource
+    private RedisUtil redisUtil;
 
     @Autowired
     private SongService songService;
@@ -214,24 +219,33 @@ public class SongController {
      */
     @GetMapping("/selectRandom")
     public Object selectRandom(HttpServletRequest request){
-        Integer num = request.getParameter("num") == null ? 20 : Integer.parseInt(request.getParameter("num").trim());
-        Set<Song> songs = new HashSet<>();
-        List<Integer> songIds = songService.selectAllId();
-        Set<Integer> songId = new HashSet<>();
-        Integer totalNum = songIds.size();
-        for (int i = 0; i < num; i++){
-            Integer id = songIds.get((int) (Math.random() * totalNum));
-            if (!songId.contains(id)){
-                songId.add(id);
+        long ExpireTime = 24 * 3600L;
+        if (redisUtil.get("randomSong") == null){
+            Integer num = request.getParameter("num") == null ? 20 : Integer.parseInt(request.getParameter("num").trim());
+            Set<Song> songs = new HashSet<>();
+            List<Integer> songIds = songService.selectAllId();
+            Set<Integer> songId = new HashSet<>();
+            Integer totalNum = songIds.size();
+            for (int i = 0; i < num; i++){
+                Integer id = songIds.get((int) (Math.random() * totalNum));
+                if (!songId.contains(id)){
+                    songId.add(id);
+                }
             }
+            for (Integer ID : songId){
+                songs.add(songService.selectById(ID));
+            }
+            redisUtil.set("randomSong", songs, ExpireTime);
+            JSONObject result = new JSONObject();
+            result.put("success", true);
+            result.put("data", songs);
+            return result;
+        }else {
+            JSONObject result = new JSONObject();
+            result.put("success", true);
+            result.put("data", redisUtil.get("randomSong"));
+            return result;
         }
-        for (Integer ID : songId){
-            songs.add(songService.selectById(ID));
-        }
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songs);
-        return result;
     }
 
     /**
