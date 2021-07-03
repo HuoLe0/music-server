@@ -33,18 +33,11 @@ public class SingerController {
      * 添加歌手
      */
     @PostMapping("/add")
-    public Object addSinger(HttpServletRequest request){
+    public Object addSinger(String name, Byte sex, String pic, String birth, String location, String introduction){
         JSONObject jsonObject = new JSONObject();
-        String name = request.getParameter("name").trim();//姓名
-        String sex = request.getParameter("sex").trim();//性别
-        String pic = request.getParameter("pic").trim();//头像
-        String birth = request.getParameter("birth").trim();//生日
-        String location = request.getParameter("location").trim();//地区
-        String introduction = request.getParameter("introduction").trim();//简介
         //把生日转换成Date格式
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date birthDate = new Date();
-//        System.out.println(birth);
         try {
             birthDate = dateFormat.parse(birth);
         } catch (ParseException e) {
@@ -53,7 +46,7 @@ public class SingerController {
         //保存到歌手对象中
         Singer singer = new Singer();
         singer.setName(name);
-        singer.setSex(new Byte(sex));
+        singer.setSex(sex);
         singer.setPic(pic);
         singer.setBirth(birthDate);
         singer.setLocation(location);
@@ -71,23 +64,13 @@ public class SingerController {
 
     /**
      * 更新歌手
-     * @param request
-     * @return
      */
     @PostMapping("/update")
-    public Object updateSinger(HttpServletRequest request){
+    public Object updateSinger(Integer id, String name, Byte sex, String pic, String birth, String location, String introduction){
         JSONObject jsonObject = new JSONObject();
-        String id = request.getParameter("id").trim();//主键
-        String name = request.getParameter("name").trim();//姓名
-        String sex = request.getParameter("sex").trim();//性别
-//        String pic = request.getParameter("pic").trim();//头像
-        String birth = request.getParameter("birth").trim();//生日
-        String location = request.getParameter("location").trim();//地区
-        String introduction = request.getParameter("introduction").trim();//简介
         //把生日转换成Date格式
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date birthDate = new Date();
-//        System.out.println(birth);
         try {
             birthDate = dateFormat.parse(birth);
         } catch (ParseException e) {
@@ -95,10 +78,9 @@ public class SingerController {
         }
         //保存到歌手对象中
         Singer singer = new Singer();
-        singer.setId(Integer.parseInt(id));
+        singer.setId(id);
         singer.setName(name);
-        singer.setSex(new Byte(sex));
-//        singer.setPic(pic);
+        singer.setSex(sex);
         singer.setBirth(birthDate);
         singer.setLocation(location);
         singer.setIntroduction(introduction);
@@ -115,28 +97,23 @@ public class SingerController {
 
     /**
      * 删除歌手
-     * @param request
-     * @return
      */
     @GetMapping("/delete")
-    public Object deleteSinger(HttpServletRequest request){
-        String id = request.getParameter("id").trim();//主键
-        Singer singer = singerService.selectById(Integer.parseInt(id));
+    public Object deleteSinger(Integer id){
+        Singer singer = singerService.selectById(id);
         String url = "." + singer.getPic();
         FileSystemUtils.deleteRecursively(new File(url));
-        boolean flag = singerService.delete(Integer.parseInt(id));
-        return flag;
+        return singerService.delete(id);
     }
 
     /**
      * 根据主键查询整个对象
      */
     @GetMapping("/selectById")
-    public Object selectById(HttpServletRequest request){
-        String id = request.getParameter("id").trim();//主键
+    public Object selectById(Integer id){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", singerService.selectById(Integer.parseInt(id)));
+        result.put("data", singerService.selectById(id));
         return result;
     }
 
@@ -156,18 +133,15 @@ public class SingerController {
      * @return
      */
     @GetMapping("/selectByPager")
-    public Object selectByPager(HttpServletRequest request){
-        String page = request.getParameter("page").trim();
-        String size = request.getParameter("size").trim();
+    public Object selectByPager(Integer page, Integer size){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", singerService.selectByPager(Integer.parseInt(page), Integer.parseInt(size)));
+        result.put("data", singerService.selectByPager(page, size));
         return result;
     }
 
     /**
      * 查询前十个歌手
-     * @return
      */
     @GetMapping("/selectTen")
     public Object selectTen(){
@@ -181,8 +155,7 @@ public class SingerController {
      * 根据歌手名字模糊查询列表
      */
     @GetMapping("/selectLikeName")
-    public Object selectLikeName(HttpServletRequest request){
-        String name = request.getParameter("name").trim();
+    public Object selectLikeName(String name){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", singerService.selectLikeName(name));
@@ -193,13 +166,10 @@ public class SingerController {
      * 根据歌手性别查询列表
      */
     @GetMapping("/selectBySex")
-    public Object selectBySex(HttpServletRequest request){
-        String sex = request.getParameter("sex").trim();
-        String page = request.getParameter("page").trim();
-        String size = request.getParameter("size").trim();
+    public Object selectBySex(Integer sex, Integer page, Integer size){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", singerService.selectBySex(Integer.parseInt(sex), Integer.parseInt(page), Integer.parseInt(size)));
+        result.put("data", singerService.selectBySex(sex, page, size));
         return result;
     }
 
@@ -210,7 +180,6 @@ public class SingerController {
     public Object updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
         Singer singer = singerService.selectById(id);
         String url = "." + singer.getPic();
-//        System.out.println(url);
         if (!url.equals("./img/singerPic/user.jpg")){
             FileSystemUtils.deleteRecursively(new File(url));
         }
@@ -237,7 +206,6 @@ public class SingerController {
         String storeAvatorPath = "/img/singerPic/" + filename;
         try {
             avatorFile.transferTo(dest);
-//            Singer singer = new Singer();
             singer.setId(id);
             singer.setPic(storeAvatorPath);
             singerService.update(singer);

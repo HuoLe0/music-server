@@ -40,16 +40,8 @@ public class SongController {
      * 添加歌曲
      */
     @PostMapping("/add")
-    public Object addSong(HttpServletRequest request, @RequestParam("pic") MultipartFile pic, @RequestParam("file") MultipartFile file) {
+    public Object addSong(Integer singerId, String name, String introduction, String lyric, String mv, @RequestParam("pic") MultipartFile pic, @RequestParam("file") MultipartFile file) {
         JSONObject jsonObject = new JSONObject();
-        //获取前端传来的参数
-        String singerId = request.getParameter("singerId").trim();//歌手id
-        String name = request.getParameter("name").trim();//歌名
-        String introduction = request.getParameter("introduction").trim();//简介
-//        String pic = "/img/songPic/music.jpg";//默认歌曲封面
-        String lyric = request.getParameter("lyric").trim();//歌词
-        String mv = request.getParameter("mv").trim();
-//        System.out.println(singerId+"++"+name+"++"+introduction+"++"+lyric);
         if (pic.isEmpty()) {
             jsonObject.put(Consts.CODE, 0);
             jsonObject.put(Consts.MSG, "图片上传失败");
@@ -85,14 +77,13 @@ public class SongController {
             file.transferTo(dest);
             pic.transferTo(picDest);
             Song song = new Song();
-            song.setSingerId(Integer.parseInt(singerId));
+            song.setSingerId(singerId);
             song.setName(name);
             song.setIntroduction(introduction);
             song.setPic(storeSongPicPath);
             song.setLyric(lyric);
             song.setUrl(storeSongPath);
             song.setMv(mv);
-//            songService.insert(song);
             boolean flag = songService.insert(song);
             if (flag) {//保存成功
                 jsonObject.put(Consts.CODE, 1);
@@ -119,42 +110,33 @@ public class SongController {
 
     /**
      * 更新歌曲
-     * @param request
-     * @return
      */
     @PostMapping("/update")
-    public Object updateSong(HttpServletRequest request) {
+    public Object updateSong(Integer id, String name, String introduction, String lyric, String mv) {
         JSONObject jsonObject = new JSONObject();
         //获取前端传来的参数
-        String id = request.getParameter("id").trim();//歌手id
-        String name = request.getParameter("name").trim();//歌名
-        String introduction = request.getParameter("introduction").trim();//简介
-        String lyric = request.getParameter("lyric").trim();//歌词
-        String mv = request.getParameter("mv").trim();
-//        System.out.println(id+"++"+name+"++"+introduction+"++"+lyric);
-            Song song = new Song();
-            song.setId(Integer.parseInt(id));
-            song.setName(name);
-            song.setIntroduction(introduction);
-            song.setLyric(lyric);
-            song.setMv(mv);
-            songService.update(song);
-            boolean flag = songService.update(song);
-            if (flag) {//保存成功
-                jsonObject.put(Consts.CODE, 1);
-                jsonObject.put("success", true);
-                jsonObject.put(Consts.MSG, "上传成功");
-                return jsonObject;
-            }
-            jsonObject.put(Consts.CODE, 0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG, "上传失败");
+        Song song = new Song();
+        song.setId(id);
+        song.setName(name);
+        song.setIntroduction(introduction);
+        song.setLyric(lyric);
+        song.setMv(mv);
+        songService.update(song);
+        boolean flag = songService.update(song);
+        if (flag) {//保存成功
+            jsonObject.put(Consts.CODE, 1);
+            jsonObject.put("success", true);
+            jsonObject.put(Consts.MSG, "上传成功");
             return jsonObject;
+        }
+        jsonObject.put(Consts.CODE, 0);
+        jsonObject.put("success", false);
+        jsonObject.put(Consts.MSG, "上传失败");
+        return jsonObject;
     }
 
     /**
      * 查询所有歌曲
-     * @return
      */
     @GetMapping("/selectAll")
     public Object selectAll(){
@@ -166,50 +148,38 @@ public class SongController {
 
     /**
      * 查询所有歌曲--分页
-     * @return
      */
     @GetMapping("/selectByPager")
-    public Object selectByPager(HttpServletRequest request){
-        String page = request.getParameter("page").trim();
-        String size = request.getParameter("size").trim();
+    public Object selectByPager(Integer page, Integer size){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songService.selectByPager(Integer.parseInt(page), Integer.parseInt(size)));
+        result.put("data", songService.selectByPager(page, size));
         return result;
     }
 
-    /**\
+    /**
      * 根据id删除歌曲
-     * @param request
-     * @return
      */
     @GetMapping("/delete")
-    public Object deleteSong(HttpServletRequest request){
-        String id = request.getParameter("id").trim();
-        Song song = songService.selectById(Integer.parseInt(id));
+    public Object deleteSong(Integer id){
+        Song song = songService.selectById(id);
         String url = "." + song.getUrl();
         String pic = "." + song.getPic();
-//        System.out.println(url);
         FileSystemUtils.deleteRecursively(new File(url));//移除本地文件
         if (!pic.equals("./img/songPic/Jay.jpg")){
             FileSystemUtils.deleteRecursively(new File(pic));
         }
-
-        boolean flag = songService.delete(Integer.parseInt(id));
-        return flag;
+        return songService.delete(id);
     }
 
     /**
      * 根据主键查询歌曲
-     * @param request
-     * @return
      */
     @GetMapping("/selectById")
-    public Object selectById(HttpServletRequest request){
-        String id = request.getParameter("id").trim();
+    public Object selectById(Integer id){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songService.selectById(Integer.parseInt(id)));
+        result.put("data", songService.selectById(id));
         return result;
     }
 
@@ -218,14 +188,14 @@ public class SongController {
      * @return
      */
     @GetMapping("/selectRandom")
-    public Object selectRandom(HttpServletRequest request){
-        long ExpireTime = 24 * 3600L;
+    public Object selectRandom(Integer nums){
+        long ExpireTime = 24 * 3600L - System.currentTimeMillis() / 1000;
         if (redisUtil.get("randomSong") == null){
-            Integer num = request.getParameter("num") == null ? 20 : Integer.parseInt(request.getParameter("num").trim());
+            int num = nums == null ? 20 : nums;
             Set<Song> songs = new HashSet<>();
             List<Integer> songIds = songService.selectAllId();
             Set<Integer> songId = new HashSet<>();
-            Integer totalNum = songIds.size();
+            int totalNum = songIds.size();
             for (int i = 0; i < num; i++){
                 Integer id = songIds.get((int) (Math.random() * totalNum));
                 if (!songId.contains(id)){
@@ -250,12 +220,9 @@ public class SongController {
 
     /**
      * 根据歌名查询
-     * @param request
-     * @return
      */
     @GetMapping("/selectByName")
-    public Object selectByName(HttpServletRequest request){
-        String name = request.getParameter("name").trim();
+    public Object selectByName(String name){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", songService.selectByName(name));
@@ -263,8 +230,7 @@ public class SongController {
     }
 
     @GetMapping("/selectLikeName")
-    public Object selectLikeName(HttpServletRequest request){
-        String name = request.getParameter("name").trim();
+    public Object selectLikeName(String name){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", songService.selectLikeName(name));
@@ -272,17 +238,12 @@ public class SongController {
     }
     /**
      * 根据歌手id查询
-     * @param request
-     * @return
      */
     @GetMapping("/selectBySingerId")
-    public Object selectBySingerId(HttpServletRequest request){
-        String singerId = request.getParameter("singerId");
-        String page = request.getParameter("page").trim();
-        String size = request.getParameter("size").trim();
+    public Object selectBySingerId(Integer singerId, Integer page, Integer size){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songService.selectBySingerId(Integer.parseInt(singerId), Integer.parseInt(page), Integer.parseInt(size)));
+        result.put("data", songService.selectBySingerId(singerId, page, size));
         return result;
     }
 
@@ -293,7 +254,6 @@ public class SongController {
     public Object updateSongPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
         Song song = songService.selectById(id);
         String pic = "." + song.getPic();
-//        System.out.println(url);
         if (!pic.equals("./img/songPic/Jay.jpg")){
             FileSystemUtils.deleteRecursively(new File(pic));
         }

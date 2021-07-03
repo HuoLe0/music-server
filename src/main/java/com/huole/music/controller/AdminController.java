@@ -22,10 +22,8 @@ public class AdminController {
      * 判断是否访问成功
      */
     @PostMapping("/admin/login/status")
-    public Object loginStatus(HttpServletRequest request, HttpSession session){
+    public Object loginStatus(String name, String password, HttpSession session){
         JSONObject jsonObject = new JSONObject();
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
         boolean flag = adminService.verifyPassword(name,password);
         if (flag){
             jsonObject.put(Consts.CODE,1);

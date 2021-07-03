@@ -33,19 +33,9 @@ public class ConsumerController {
      * 添加歌手
      */
     @PostMapping("/add")
-    public Object addConsumer(HttpServletRequest request){
+    public Object addConsumer(String username, String password, String sex, String phoneNum, String email, String birth, String introduction, String location, String avator){
         JSONObject jsonObject = new JSONObject();
-        String username = request.getParameter("username").trim();//姓名
-        String password = request.getParameter("password").trim();//密码
         password = MD5Utils.code(password);
-        String sex = request.getParameter("sex").trim();//性别
-        String phoneNum = request.getParameter("phoneNum").trim();//电话
-        String email = request.getParameter("email").trim();//邮箱
-        String birth = request.getParameter("birth").trim();//生日
-        String introduction = request.getParameter("introduction").trim();//简介
-        String location = request.getParameter("location").trim();//地区
-        String avator = request.getParameter("avator").trim();//头像
-
         if (username == null || username.equals("")){
             jsonObject.put(Consts.CODE,0);
             jsonObject.put(Consts.MSG,"用户名不能为空");
@@ -68,7 +58,6 @@ public class ConsumerController {
         //把生日转换成Date格式
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date birthDate = new Date();
-//        System.out.println(birth);
         try {
             birthDate = dateFormat.parse(birth);
         } catch (ParseException e) {
@@ -99,27 +88,14 @@ public class ConsumerController {
 
     /**
      * 更新用户
-     * @param request
-     * @return
      */
     @PostMapping("/update")
-    public Object updateConsumer(HttpServletRequest request){
+    public Object updateConsumer(Integer id, String username, String password, String sex, String phoneNum, String email, String birth, String introduction, String location, String avator){
         JSONObject jsonObject = new JSONObject();
-        String id = request.getParameter("id").trim();//id
-        String username = request.getParameter("username").trim();//姓名
-        String password = request.getParameter("password").trim();//密码
         password = MD5Utils.code(password);
-        String sex = request.getParameter("sex").trim();//性别
-        String phoneNum = request.getParameter("phoneNum").trim();//电话
-        String email = request.getParameter("email").trim();//邮箱
-        String birth = request.getParameter("birth").trim();//生日
-        String introduction = request.getParameter("introduction").trim();//简介
-        String location = request.getParameter("location").trim();//地区
-//        String avator = request.getParameter("avator").trim();//头像
         //把生日转换成Date格式
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date birthDate = new Date();
-//        System.out.println(birth);
         try {
             birthDate = dateFormat.parse(birth);
         } catch (ParseException e) {
@@ -127,7 +103,7 @@ public class ConsumerController {
         }
         //保存到歌手对象中
         Consumer consumer = new Consumer();
-        consumer.setId(Integer.parseInt(id));
+        consumer.setId(id);
         consumer.setUsername(username);
         consumer.setPassword(password);
         consumer.setSex(sex);
@@ -148,29 +124,25 @@ public class ConsumerController {
     }
 
     /**
-     * 删除y用户
-     * @param request
+     * 删除用户
      * @return
      */
     @GetMapping("/delete")
-    public Object deleteConsumer(HttpServletRequest request){
-        String id = request.getParameter("id").trim();//主键
-        Consumer consumer = consumerService.selectById(Integer.parseInt(id));
+    public Object deleteConsumer(Integer id){
+        Consumer consumer = consumerService.selectById(id);
         String url = "." + consumer.getAvator();
         FileSystemUtils.deleteRecursively(new File(url));
-        boolean flag = consumerService.delete(Integer.parseInt(id));
-        return flag;
+        return consumerService.delete(id);
     }
 
     /**
      * 根据主键查询整个对象
      */
     @GetMapping("/selectById")
-    public Object selectById(HttpServletRequest request){
-        String id = request.getParameter("id").trim();//主键
+    public Object selectById(Integer id){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", consumerService.selectById(Integer.parseInt(id)));
+        result.put("data", consumerService.selectById(id));
         return result;
     }
 
@@ -189,8 +161,7 @@ public class ConsumerController {
      * 根据名字模糊查询列表
      */
     @GetMapping("/selectByName")
-    public Object selectByName(HttpServletRequest request){
-        String username = request.getParameter("username").trim();
+    public Object selectByName(String username){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", consumerService.selectByName(username));
@@ -200,8 +171,7 @@ public class ConsumerController {
      * 根据名字模糊查询列表
      */
     @GetMapping("/selectLikeName")
-    public Object selectLikeName(HttpServletRequest request){
-        String username = request.getParameter("username").trim();
+    public Object selectLikeName(String username){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", consumerService.selectLikeName(username));
@@ -211,8 +181,7 @@ public class ConsumerController {
      * 根据电话查询列表
      */
     @GetMapping("/selectByPhoneNum")
-    public Object selectByPhoneNum(HttpServletRequest request){
-        String phoneNum = request.getParameter("phoneNum").trim();
+    public Object selectByPhoneNum(String phoneNum){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", consumerService.selectByPhoneNum(phoneNum));
@@ -223,9 +192,7 @@ public class ConsumerController {
      * 检验
      */
     @GetMapping("/verifyPassword")
-    public Object verifyPassword(HttpServletRequest request){
-        String username = request.getParameter("username").trim();
-        String password = request.getParameter("password").trim();
+    public Object verifyPassword(String username, String password){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", consumerService.verifyPassword(username,password));
@@ -239,7 +206,6 @@ public class ConsumerController {
     public Object updateConsumerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
         Consumer consumer = consumerService.selectById(id);
         String url = "." + consumer.getAvator();
-//        System.out.println(url);
         if (!url.equals("./img/consumerAvator/user.jpg")){
             FileSystemUtils.deleteRecursively(new File(url));
         }
@@ -266,7 +232,6 @@ public class ConsumerController {
         String storeAvatorPath = "/img/consumerAvator/" + filename;
         try {
             avatorFile.transferTo(dest);
-//            Consumer consumer = new Consumer();
             consumer.setId(id);
             consumer.setAvator(storeAvatorPath);
             consumerService.update(consumer);
@@ -288,16 +253,13 @@ public class ConsumerController {
             jsonObject.put(Consts.CODE,0);
             jsonObject.put("success", false);
             jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
-
         }finally {
             return jsonObject;
         }
     }
 
     @PostMapping("/login")
-    public Object Login(HttpServletRequest request){
-        String username = request.getParameter("username").trim();
-        String password = request.getParameter("password").trim();
+    public Object Login(String username, String password){
         password = MD5Utils.code(password);
         JSONObject jsonObject = new JSONObject();
         if (username == null || username.equals("")){

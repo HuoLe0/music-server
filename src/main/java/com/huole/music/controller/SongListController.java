@@ -6,11 +6,13 @@ import com.huole.music.domain.SongList;
 import com.huole.music.domain.SongList;
 import com.huole.music.service.SongListService;
 import com.huole.music.utils.Consts;
+import com.huole.music.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -31,17 +33,14 @@ public class SongListController {
     @Autowired
     private SongListService songListService;
 
+    @Resource
+    private RedisUtil redisUtil;
     /**
      * 添加歌单
      */
     @PostMapping("/add")
-    public Object addSongList(HttpServletRequest request){
+    public Object addSongList(String title, String pic, String introduction, String style){
         JSONObject jsonObject = new JSONObject();
-        String title = request.getParameter("title").trim();//标题
-        String pic = request.getParameter("pic").trim();//封面
-        String introduction = request.getParameter("introduction").trim();//简介
-        String style = request.getParameter("style").trim();//风格
-//        System.out.println();
         //保存到歌单对象中
         SongList songList = new SongList();
         songList.setTitle(title);
@@ -63,21 +62,15 @@ public class SongListController {
      * 前端用户添加歌单
      */
     @PostMapping("/addByConsumer")
-    public Object addByConsumer(HttpServletRequest request){
+    public Object addByConsumer(String title, String pic, String introduction, String style, Integer userId){
         JSONObject jsonObject = new JSONObject();
-        String title = request.getParameter("title").trim();//标题
-        String pic = request.getParameter("pic").trim();//封面
-        String introduction = request.getParameter("introduction").trim();//简介
-        String style = request.getParameter("style").trim();//风格
-        String userId = request.getParameter("userId").trim();//用户id
-
         //保存到歌单对象中
         SongList songList = new SongList();
         songList.setTitle(title);
         songList.setPic(pic);
         songList.setIntroduction(introduction);
         songList.setStyle(style);
-        songList.setUserId(Integer.parseInt(userId));
+        songList.setUserId(userId);
         boolean flag = songListService.insertByConsumer(songList);
         if (flag){//保存成功
             jsonObject.put(Consts.CODE,1);
@@ -91,22 +84,14 @@ public class SongListController {
 
     /**
      * 更新歌单
-     * @param request
-     * @return
      */
     @PostMapping("/update")
-    public Object updateSongList(HttpServletRequest request){
+    public Object updateSongList(Integer id, String title, String pic, String introduction, String style){
         JSONObject jsonObject = new JSONObject();
-        String id = request.getParameter("id").trim();//主键
-        String title = request.getParameter("title").trim();//标题
-//        String pic = request.getParameter("pic").trim();//封面
-        String introduction = request.getParameter("introduction").trim();//简介
-        String style = request.getParameter("style").trim();//风格
         //保存到歌手对象中
         SongList songList = new SongList();
-        songList.setId(Integer.parseInt(id));
+        songList.setId(id);
         songList.setTitle(title);
-//        songList.setPic(pic);
         songList.setIntroduction(introduction);
         songList.setStyle(style);
         boolean flag = songListService.update(songList);
@@ -121,17 +106,15 @@ public class SongListController {
     }
 
     @PostMapping("/addSong")
-    public Object addSong(HttpServletRequest request) {
-        String songId = request.getParameter("songId").trim();//歌曲id
-        String songListId = request.getParameter("songListId").trim();//歌单id
-        String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+    public Object addSong(Integer songId, Integer songListId) {
+        String songs = songListService.selectById(songListId).getSongs();
         JSONObject result = new JSONObject();
         if (songs.matches(".*," + songId + ",.*")){
             result.put("success", false);
             result.put("message", "歌曲已存在！");
             return result;
         }else {
-            boolean flag = songListService.addSong(Integer.parseInt(songListId), Integer.parseInt(songId));
+            boolean flag = songListService.addSong(songListId, songId);
             result.put("success", flag);
             result.put("message", "添加成功！");
         }
@@ -139,20 +122,16 @@ public class SongListController {
     }
 
     @GetMapping("/deleteSong")
-    public Object deleteSong(HttpServletRequest request) {
-        String songId = request.getParameter("songId").trim();//歌曲id
-        String songListId = request.getParameter("songListId").trim();//歌单id
-        String creatorId = request.getParameter("creatorId").trim();//歌单创建者id
-        String userId = request.getParameter("userId").trim();//当前登录用户id
+    public Object deleteSong(Integer songId, Integer songListId, Integer creatorId, Integer userId) {
         JSONObject result = new JSONObject();
         if (creatorId.equals(userId)){
-            String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+            String songs = songListService.selectById(songListId).getSongs();
             if (!songs.matches(".*," + songId + ",.*")){
                 result.put("success", false);
                 result.put("message", "歌曲不存在！");
                 return result;
             }else {
-                boolean flag = songListService.deleteSong(Integer.parseInt(songListId), Integer.parseInt(songId));
+                boolean flag = songListService.deleteSong(songListId, songId);
                 result.put("success", flag);
                 result.put("message", "删除成功！");
             }
@@ -165,33 +144,26 @@ public class SongListController {
     }
     /**
      * 根据id删除歌单
-     * @param request
-     * @return
      */
     @GetMapping("/delete")
-    public Object delSongList(HttpServletRequest request){
-        String id = request.getParameter("id").trim();
-        boolean flag = songListService.delete(Integer.parseInt(id));
+    public Object delSongList(Integer id){
+        boolean flag = songListService.delete(id);
         return flag;
     }
 
     /**
      * 根据主键查询歌dan
-     * @param request
-     * @return
      */
     @GetMapping("/selectById")
-    public Object selectById(HttpServletRequest request){
-        String id = request.getParameter("id").trim();
+    public Object selectById(Integer id){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songListService.selectById(Integer.parseInt(id)));
+        result.put("data", songListService.selectById(id));
         return result;
     }
 
     /**
      * 查询所有歌单
-     * @return
      */
     @GetMapping("/selectAll")
     public Object selectAll(){
@@ -206,12 +178,10 @@ public class SongListController {
      * @return
      */
     @GetMapping("/selectByPager")
-    public Object selectByPager(HttpServletRequest request){
-        String page = request.getParameter("page").trim();
-        String size = request.getParameter("size").trim();
+    public Object selectByPager(Integer page, Integer size){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songListService.selectByPager(Integer.parseInt(page), Integer.parseInt(size)));
+        result.put("data", songListService.selectByPager(page, size));
         return result;
     }
 
@@ -220,27 +190,34 @@ public class SongListController {
      * @return
      */
     @GetMapping("/selectRandom")
-    public Object selectRandom(HttpServletRequest request){
-        Integer num = request.getParameter("num") == null ? 10 : Integer.parseInt(request.getParameter("num").trim());
-        Integer n = num == null ? 10 : num;
-        Set<SongList> songLists = new HashSet<>();
-        List<Integer> songIds = songListService.selectAllId();
-        System.out.println(songLists);
-        Integer totalNum = songIds.size();
-        for (int i = 0; i < n; i++){
-            Integer id = songIds.get((int) (Math.random() * totalNum));
-            songLists.add(songListService.selectById(id));
+    public Object selectRandom(Integer nums){
+        long ExpireTime = 24 * 3600L - System.currentTimeMillis() / 1000;
+        if (redisUtil.get("randomSongList") == null){
+            Integer n = nums == null ? 10 : nums;
+            Set<SongList> songLists = new HashSet<>();
+            List<Integer> songIds = songListService.selectAllId();
+            System.out.println(songLists);
+            Integer totalNum = songIds.size();
+            for (int i = 0; i < n; i++){
+                Integer id = songIds.get((int) (Math.random() * totalNum));
+                songLists.add(songListService.selectById(id));
+            }
+            redisUtil.set("randomSongList", songLists, ExpireTime);
+            JSONObject result = new JSONObject();
+            result.put("success", true);
+            result.put("data", songLists);
+            return result;
+        }else {
+            JSONObject result = new JSONObject();
+            result.put("success", true);
+            result.put("data", redisUtil.get("randomSongList"));
+            return result;
         }
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songLists);
-        return result;
     }
 
     @GetMapping("/selectSongs")
-    public Object selectSongs(HttpServletRequest request) {
-        String songListId = request.getParameter("songListId").trim();//歌单id
-        String songs = songListService.selectById(Integer.parseInt(songListId)).getSongs();
+    public Object selectSongs(Integer songListId) {
+        String songs = songListService.selectById(songListId).getSongs();
         System.out.println(songs);
         String[] songIds = songs.split(",");
         JSONObject result = new JSONObject();
@@ -251,20 +228,17 @@ public class SongListController {
 
     /**
      * 查询用户所有歌单
-     * @return
      */
     @GetMapping("/selectAllConsumer")
-    public Object selectAllConsumer(HttpServletRequest request){
-        String userId = request.getParameter("userId").trim();
+    public Object selectAllConsumer(Integer userId){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songListService.selectAllConsumer(Integer.parseInt(userId)));
+        result.put("data", songListService.selectAllConsumer(userId));
         return result;
     }
 
     /**
      * 查询前十个歌单
-     * @return
      */
     @GetMapping("/selectTen")
     public Object selectTen(){
@@ -276,12 +250,10 @@ public class SongListController {
 
     /**
      * 根据标题精确查找
-     * @param request
      * @return
      */
     @GetMapping("/selectByTitle")
-    public Object selectByTitle(HttpServletRequest request){
-        String title = request.getParameter("title").trim();
+    public Object selectByTitle(String title){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", songListService.selectByTitle(title));
@@ -290,12 +262,9 @@ public class SongListController {
 
     /**
      * 根据标题模糊查找
-     * @param request
-     * @return
      */
     @GetMapping("/selectLikeTitle")
-    public Object selectLikeTitle(HttpServletRequest request){
-        String title = request.getParameter("title").trim();
+    public Object selectLikeTitle(String title){
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("data", songListService.selectLikeTitle(title));
@@ -304,17 +273,12 @@ public class SongListController {
 
     /**
      * 根据风格模糊查找
-     * @param request
-     * @return
      */
     @GetMapping("/selectLikeStyle")
-    public Object selectLikeStyle(HttpServletRequest request){
-        String style = request.getParameter("style").trim();
-        String page = request.getParameter("page").trim();
-        String size = request.getParameter("size").trim();
+    public Object selectLikeStyle(String style, Integer page, Integer size){
         JSONObject result = new JSONObject();
         result.put("success", true);
-        result.put("data", songListService.selectLikeStyle(style, Integer.parseInt(page), Integer.parseInt(size)));
+        result.put("data", songListService.selectLikeStyle(style, page, size));
         return result;
     }
 
@@ -326,7 +290,6 @@ public class SongListController {
     public Object updateSongListPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
         SongList songList = songListService.selectById(id);
         String pic = "." + songList.getPic();
-//        System.out.println(url);
         if (!pic.equals("./img/songListPic/list.jpg")){
             FileSystemUtils.deleteRecursively(new File(pic));
         }

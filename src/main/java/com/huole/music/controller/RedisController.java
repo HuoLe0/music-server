@@ -34,9 +34,6 @@ public class RedisController {
     @RequestMapping("set")
     public boolean redisset(String key, String value){
         List<Song> songList = songService.selectAll();
-
-        //return redisUtil.set(key,userEntity,ExpireTime);
-
         return redisUtil.set(key,songList);
     }
 

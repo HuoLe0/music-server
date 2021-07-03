@@ -11,7 +11,7 @@
         <result column="phone_num" jdbcType="VARCHAR" property="phoneNum"/>
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="birth" jdbcType="VARCHAR" property="birth"/>
-        <!--        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>-->
+<!--        <result column="introduction" jdbcType="VARCHAR" property="introduction"/>-->
         <result column="location" jdbcType="VARCHAR" property="location"/>
         <result column="avator" jdbcType="VARCHAR" property="avator"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -27,7 +27,7 @@
     </sql>
 
     <sql id="Blob_Column_List">
-        id,username,password,sex,phone_num,email,birth,introduction,location,avator,create_time,update_time
+        id,username,sex,birth,introduction,location,avator
     </sql>
 
     <insert id="insert" parameterType="com.huole.music.domain.Consumer">

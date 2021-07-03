@@ -28,18 +28,14 @@ public class RankController {
      * 添加歌曲
      */
     @PostMapping("/add")
-    public Object addRank(HttpServletRequest request) {
+    public Object addRank(Integer songListId, Integer consumerId, Integer score) {
         JSONObject jsonObject = new JSONObject();
-        //获取前端传来的参数
-        String songListId = request.getParameter("songListId");//歌单id
-        String consumerId = request.getParameter("consumerId");//用户id
-        String score = request.getParameter("score");//评分
         Rank rank = new Rank();
-        boolean flag1 = rankService.verifyRank(Integer.parseInt(songListId),Integer.parseInt(consumerId));
+        boolean flag1 = rankService.verifyRank(songListId,consumerId);
         if (!flag1){
-            rank.setSongListId(Integer.parseInt(songListId));
-            rank.setConsumerId(Integer.parseInt(consumerId));
-            rank.setScore(Integer.parseInt(score));
+            rank.setSongListId(songListId);
+            rank.setConsumerId(consumerId);
+            rank.setScore(score);
             boolean flag = rankService.insert(rank);
             if (flag) {//保存成功
                 jsonObject.put(Consts.CODE, 1);
@@ -54,38 +50,31 @@ public class RankController {
             jsonObject.put(Consts.MSG, "请勿重复评价！");
             return jsonObject;
         }
-//        System.out.println(songListId+ "-"+ consumerId+ "-"+ score);
     }
-
 
     /**
      * 查询歌单总分
-     * @return
      */
     @GetMapping("/score")
-    public Object selectScoreSum(HttpServletRequest request){
-        String songListId = request.getParameter("songListId").trim();//歌单id
-        return rankService.selectScoreSum(Integer.parseInt(songListId));
+    public Object selectScoreSum(Integer songListId){
+        return rankService.selectScoreSum(songListId);
     }
 
     /**
-     * 查询歌单总人数
-     * @return
+     * 查询歌单总数
      */
     @GetMapping("/num")
-    public Object selectRankNum(HttpServletRequest request){
-        String songListId = request.getParameter("songListId").trim();//歌单id
-        return rankService.selectRankNum(Integer.parseInt(songListId));
+    public Object selectRankNum(Integer songListId){
+        return rankService.selectRankNum(songListId);
     }
 
     /**
-     * 查询歌单总人数
+     * 查询歌单总分数
      * @return
      */
     @GetMapping("/rank")
-    public Object rankOfSongListId(HttpServletRequest request){
-        String songListId = request.getParameter("songListId").trim();//歌单id
-        return rankService.rankOfSongListId(Integer.parseInt(songListId));
+    public Object rankOfSongListId(Integer songListId){
+        return rankService.rankOfSongListId(songListId);
     }
 
 

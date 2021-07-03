@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * 收藏控制类
@@ -25,31 +23,29 @@ public class CollectController {
 
     /**
      * 添加收藏
+     * @param userId
+     * @param type
+     * @param songId
+     * @return
      */
     @PostMapping("/add")
-    public Object addCollect(HttpServletRequest request){
+    public Object addCollect(Integer userId, Byte type, Integer songId){
         JSONObject jsonObject = new JSONObject();
-        String userId = request.getParameter("userId");//用户id
-        String type = request.getParameter("type").trim();//类型
-        String songId = request.getParameter("songId");//歌曲id
-//        String songListId = request.getParameter("songListId");//歌单id
-//        System.out.println(songId);
-        if(songId==null || songId.equals("")){
+        if(songId==null){
             jsonObject.put(Consts.CODE,0);
             jsonObject.put(Consts.MSG,"收藏歌曲为空");
             return jsonObject;
         }
-        if(collectService.existSongId(Integer.parseInt(userId),Integer.parseInt(songId))){
+        if(collectService.existSongId(userId ,songId)){
             jsonObject.put(Consts.CODE,2);
             jsonObject.put(Consts.MSG,"您已收藏该歌曲");
             return jsonObject;
         }
         //保存到收藏对象中
         Collect collect = new Collect();
-        collect.setUserId(Integer.parseInt(userId));
-        collect.setType(new Byte(type));
-        collect.setSongId(Integer.parseInt(songId));
-//        collect.setSongListId(Integer.parseInt(songListId));
+        collect.setUserId(userId);
+        collect.setType(type);
+        collect.setSongId(songId);
         boolean flag = collectService.insert(collect);
         if (flag){//保存成功
             jsonObject.put(Consts.CODE,1);
@@ -63,31 +59,27 @@ public class CollectController {
 
     /**
      * 更新收藏
-     * @param request
+     * @param id
+     * @param userId
+     * @param type
+     * @param songId
+     * @param songListId
      * @return
      */
     @PostMapping("/update")
-    public Object updateCollect(HttpServletRequest request){
+    public Object updateCollect(Integer id, Integer userId, Byte type, Integer songId, Integer songListId){
         JSONObject jsonObject = new JSONObject();
-        String id = request.getParameter("id").trim();
-        String userId = request.getParameter("userId").trim();//用户id
-        String type = request.getParameter("type").trim();//类型
-        String songId = request.getParameter("songId").trim();//歌曲id
-        String songListId = request.getParameter("songListId").trim();//歌单id
+
         //保存到收藏对象中
         Collect collect = new Collect();
-        collect.setId(Integer.parseInt(id));
-        collect.setUserId(Integer.parseInt(userId));
-        collect.setType(new Byte(type));
-        if(songId!=null&&songId.equals("")){
-            songId = null;
-        }else {
-            collect.setSongId(Integer.parseInt(songId));
+        collect.setId(id);
+        collect.setUserId(userId);
+        collect.setType(type);
+        if(songId!=null){
+            collect.setSongId(songId);
         }
-        if(songListId != null && songListId.equals("")){
-            songListId = null;
-        }else {
-            collect.setSongListId(Integer.parseInt(songListId));
+        if(songListId != null){
+            collect.setSongListId(songListId);
         }
         boolean flag = collectService.update(collect);
         if (flag){//保存成功
@@ -102,28 +94,24 @@ public class CollectController {
 
     /**
      * 删除收藏
-     * @param request
+     * @param id
      * @return
      */
     @GetMapping("/delete")
-    public Object deleteCollect(HttpServletRequest request){
-        String id = request.getParameter("id").trim();//主键
-        return collectService.delete(Integer.parseInt(id));
+    public Object deleteCollect(Integer id){
+        return collectService.delete(id);
     }
 
     /**
-     * 删除收藏
-     * @param request
+     * 删除用户收藏歌曲
+     * @param userId
+     * @param songId
      * @return
      */
     @GetMapping("/deleteByUserIdSongId")
-    public Object delete(HttpServletRequest request){
-        String userId = request.getParameter("userId").trim();//用户id
-        String songId = request.getParameter("songId").trim();//歌曲id
-        return collectService.deleteByUserIdSongId(Integer.parseInt(userId),Integer.parseInt(songId));
+    public Object delete(Integer userId, Integer songId){
+        return collectService.deleteByUserIdSongId(userId, songId);
     }
-
-
 
     /**
      * 查询所有收藏
@@ -134,12 +122,13 @@ public class CollectController {
     }
 
     /**
-     * 根据收藏名字模糊查询列表
+     * 查询用户收藏歌曲
+     * @param userId
+     * @return
      */
     @GetMapping("/selectByUserId")
-    public Object selectByUserId(HttpServletRequest request){
-        String userId = request.getParameter("userId").trim();
-        return collectService.selectByUserId(Integer.parseInt(userId));
+    public Object selectByUserId(Integer userId){
+        return collectService.selectByUserId(userId);
     }
 
 }

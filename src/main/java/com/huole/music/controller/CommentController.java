@@ -21,26 +21,26 @@ public class CommentController {
 
     /**
      * 添加评论
+     * @param userId
+     * @param type
+     * @param songId
+     * @param songListId
+     * @param content
+     * @return
      */
     @PostMapping("/add")
-    public Object addComment(HttpServletRequest request){
+    public Object addComment(Integer userId, String type, Integer songId, Integer songListId, String content){
         JSONObject jsonObject = new JSONObject();
-        String userId = request.getParameter("userId");//用户id
-        String type = request.getParameter("type").trim();//类型
-        String songId = request.getParameter("songId");//歌曲id
-        String songListId = request.getParameter("songListId");//歌单id
-        String content = request.getParameter("content").trim();//内容
-        System.out.println(songId);
         //保存到评论对象中
         Comment comment = new Comment();
-        comment.setUserId(Integer.parseInt(userId));
+        comment.setUserId(userId);
         comment.setType(type);
         if(new Byte(type) ==0){
-            comment.setSongId(Integer.parseInt(songId));
+            comment.setSongId(songId);
         }else{
-            comment.setSongListId(Integer.parseInt(songListId));
+            comment.setSongListId(songListId);
         }
-        if(content == "" || content.equals(null)){
+        if(content == null || content.equals("")){
             jsonObject.put(Consts.CODE,0);
             jsonObject.put(Consts.MSG,"评论内容不能为空");
             return jsonObject;
@@ -59,36 +59,31 @@ public class CommentController {
 
     /**
      * 更新评论
-     * @param request
+     * @param id
+     * @param userId
+     * @param type
+     * @param songId
+     * @param songListId
+     * @param content
+     * @param up
      * @return
      */
     @PostMapping("/update")
-    public Object updateComment(HttpServletRequest request){
+    public Object updateComment(Integer id, Integer userId, String type, Integer songId, Integer songListId, String content, Integer up){
         JSONObject jsonObject = new JSONObject();
-        String id = request.getParameter("id").trim();
-        String userId = request.getParameter("userId").trim();//用户id
-        String type = request.getParameter("type").trim();//类型
-        String songId = request.getParameter("songId").trim();//歌曲id
-        String songListId = request.getParameter("songListId").trim();//歌单id
-        String content = request.getParameter("content").trim();//内容
-        String up = request.getParameter("up").trim();//评论点赞数
         //保存到评论对象中
         Comment comment = new Comment();
-        comment.setId(Integer.parseInt(id));
-        comment.setUserId(Integer.parseInt(userId));
+        comment.setId(id);
+        comment.setUserId(userId);
         comment.setType(type);
-        if(songId!=null&&songId.equals("")){
-            songId = null;
-        }else {
-            comment.setSongId(Integer.parseInt(songId));
+        if(songId!=null){
+            comment.setSongId(songId);
         }
-        if(songListId != null && songListId.equals("")){
-            songListId = null;
-        }else {
-            comment.setSongListId(Integer.parseInt(songListId));
+        if(songListId != null){
+            comment.setSongListId(songListId);
         }
         comment.setContent(content);
-        comment.setUp(Integer.parseInt(up));
+        comment.setUp(up);//点赞数
         boolean flag = commentService.update(comment);
         if (flag){//保存成功
             jsonObject.put(Consts.CODE,1);
@@ -102,34 +97,30 @@ public class CommentController {
 
     /**
      * 删除评论
-     * @param request
+     * @param id
      * @return
      */
     @GetMapping("/delete")
-    public Object deleteComment(HttpServletRequest request){
-        String id = request.getParameter("id").trim();//主键
-        return commentService.delete(Integer.parseInt(id));
+    public Object deleteComment(Integer id){
+        return commentService.delete(id);
     }
 
     @GetMapping("/deleteBySongId")
-    public Object deleteBySongId(HttpServletRequest request){
-        String songId = request.getParameter("songId").trim();//主键
-        return commentService.delete(Integer.parseInt(songId));
+    public Object deleteBySongId(Integer songId){
+        return commentService.delete(songId);
     }
 
     @GetMapping("/deleteBySongListId")
-    public Object deleteBySongListId(HttpServletRequest request){
-        String songListId = request.getParameter("songListId").trim();//主键
-        return commentService.delete(Integer.parseInt(songListId));
+    public Object deleteBySongListId(Integer songListId){
+        return commentService.delete(songListId);
     }
 
     /**
      * 根据主键查询整个对象
      */
     @GetMapping("/selectById")
-    public Object selectByPrimaryKey(HttpServletRequest request){
-        String id = request.getParameter("id").trim();//主键
-        return commentService.selectById(Integer.parseInt(id));
+    public Object selectByPrimaryKey(Integer id){
+        return commentService.selectById(id);
     }
 
     /**
@@ -141,21 +132,19 @@ public class CommentController {
     }
 
     /**
-     * 根据评论名字模糊查询列表
+     * 查询歌曲评论
      */
     @GetMapping("/commentOfSongId")
-    public Object commentOfSongId(HttpServletRequest request){
-        String songId = request.getParameter("songId").trim();
-        return commentService.commentOfSongId(Integer.parseInt(songId));
+    public Object commentOfSongId(Integer songId){
+        return commentService.commentOfSongId(songId);
     }
 
     /**
-     * 根据评论性别查询列表
+     * 查询歌单评论
      */
     @GetMapping("/commentOfSongListId")
-    public Object commentOfSex(HttpServletRequest request){
-        String songListId = request.getParameter("songListId").trim();
-        return commentService.commentOfSongListId(Integer.parseInt(songListId));
+    public Object commentOfSex(Integer songListId){
+        return commentService.commentOfSongListId(songListId);
     }
 
 
@@ -163,15 +152,11 @@ public class CommentController {
      * 给某个评论点赞
      */
     @PostMapping("/like")
-    public Object like(HttpServletRequest request){
+    public Object like(Integer id, Integer up){
         JSONObject jsonObject = new JSONObject();
-        String id = request.getParameter("id").trim();
-        String up = request.getParameter("up").trim();//评论点赞数
-//        String userId = request.getParameter("userId").trim();//用户id
         Comment comment = new Comment();
-        comment.setId(Integer.parseInt(id));
-        comment.setUp(Integer.parseInt(up));
-//        comment.setUserId(Integer.parseInt(userId));
+        comment.setId(id);
+        comment.setUp(up);
         boolean flag = commentService.update(comment);
         if (flag){//保存成功
             jsonObject.put(Consts.CODE,1);
