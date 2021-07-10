@@ -19,10 +19,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 歌单控制类
@@ -191,7 +188,8 @@ public class SongListController {
      */
     @GetMapping("/selectRandom")
     public Object selectRandom(Integer nums){
-        long ExpireTime = 24 * 3600L - System.currentTimeMillis() / 1000;
+        Calendar calendar = Calendar.getInstance();
+        long ExpireTime = (24 - calendar.get(Calendar.HOUR)) * 3600L;
         if (redisUtil.get("randomSongList") == null){
             Integer n = nums == null ? 10 : nums;
             Set<SongList> songLists = new HashSet<>();

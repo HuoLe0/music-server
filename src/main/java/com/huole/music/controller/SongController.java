@@ -18,10 +18,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 歌曲管理controller
@@ -189,7 +186,8 @@ public class SongController {
      */
     @GetMapping("/selectRandom")
     public Object selectRandom(Integer nums){
-        long ExpireTime = 24 * 3600L - System.currentTimeMillis() / 1000;
+        Calendar calendar = Calendar.getInstance();
+        long ExpireTime = (24 - calendar.get(Calendar.HOUR)) * 3600L;
         if (redisUtil.get("randomSong") == null){
             int num = nums == null ? 20 : nums;
             Set<Song> songs = new HashSet<>();
