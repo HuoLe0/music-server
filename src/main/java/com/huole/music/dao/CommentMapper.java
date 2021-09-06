@@ -1,6 +1,6 @@
 package com.huole.music.dao;
 
-import com.huole.music.domain.Comment;
+import com.huole.music.model.Comment;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

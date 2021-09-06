@@ -3,7 +3,7 @@
         "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huole.music.dao.SongListMapper">
-    <resultMap id="BaseResultMap" type="com.huole.music.domain.SongList" >
+    <resultMap id="BaseResultMap" type="com.huole.music.model.SongList" >
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="title" jdbcType="VARCHAR" property="title"/>
         <result column="pic" jdbcType="VARCHAR" property="pic"/>
@@ -12,7 +12,7 @@
         <result column="songs" jdbcType="VARCHAR" property="songs"/>
     </resultMap>
 
-    <resultMap id="ResultMapWithBLOBs" type="com.huole.music.domain.SongList" extends="BaseResultMap">
+    <resultMap id="ResultMapWithBLOBs" type="com.huole.music.model.SongList" extends="BaseResultMap">
         <result column="introduction" jdbcType="VARCHAR" property="introduction"/>
     </resultMap>
 
@@ -24,7 +24,7 @@
         id,title,pic,introduction,style,user_id,songs
     </sql>
 
-    <insert id="insert" parameterType="com.huole.music.domain.SongList">
+    <insert id="insert" parameterType="com.huole.music.model.SongList">
         insert into song_list
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -62,7 +62,7 @@
         </trim>
     </insert>
 
-    <update id="addSong" parameterType="com.huole.music.domain.SongList">
+    <update id="addSong" parameterType="com.huole.music.model.SongList">
         update song_list
         <set>
 
@@ -74,7 +74,7 @@
         where id = #{id}
     </update>
 
-    <insert id="insertByConsumer" parameterType="com.huole.music.domain.SongList">
+    <insert id="insertByConsumer" parameterType="com.huole.music.model.SongList">
         insert into song_list
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -118,7 +118,7 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.huole.music.domain.SongList">
+    <update id="update" parameterType="com.huole.music.model.SongList">
         update song_list
         <set>
 

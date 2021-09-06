@@ -1,4 +1,4 @@
-package com.huole.music.domain;
+package com.huole.music.model;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.huole.music.dao;
 
-import com.huole.music.domain.Collect;
+import com.huole.music.model.Collect;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

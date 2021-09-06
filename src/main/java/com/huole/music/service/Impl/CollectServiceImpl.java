@@ -2,8 +2,8 @@ package com.huole.music.service.Impl;
 
 import com.huole.music.dao.CollectMapper;
 import com.huole.music.dao.SongMapper;
-import com.huole.music.domain.Collect;
-import com.huole.music.domain.Song;
+import com.huole.music.model.Collect;
+import com.huole.music.model.Song;
 import com.huole.music.service.CollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

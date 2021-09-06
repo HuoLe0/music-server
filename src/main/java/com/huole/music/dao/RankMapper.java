@@ -1,9 +1,7 @@
 package com.huole.music.dao;
 
-import com.huole.music.domain.Rank;
+import com.huole.music.model.Rank;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * 评分Dao

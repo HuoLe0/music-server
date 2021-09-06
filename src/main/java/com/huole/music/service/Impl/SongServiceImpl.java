@@ -1,8 +1,8 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.SongMapper;
-import com.huole.music.domain.Pager;
-import com.huole.music.domain.Song;
+import com.huole.music.model.Pager;
+import com.huole.music.model.Song;
 import com.huole.music.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

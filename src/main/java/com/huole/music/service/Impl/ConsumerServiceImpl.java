@@ -1,7 +1,7 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.ConsumerMapper;
-import com.huole.music.domain.Consumer;
+import com.huole.music.model.Consumer;
 import com.huole.music.service.ConsumerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

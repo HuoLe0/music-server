@@ -1,8 +1,7 @@
-package com.huole.music.domain;
+package com.huole.music.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * 歌曲

@@ -1,7 +1,7 @@
 package com.huole.music.service;
 
-import com.huole.music.domain.Collect;
-import com.huole.music.domain.Song;
+import com.huole.music.model.Collect;
+import com.huole.music.model.Song;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

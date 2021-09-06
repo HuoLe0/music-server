@@ -1,7 +1,7 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.CommentMapper;
-import com.huole.music.domain.Comment;
+import com.huole.music.model.Comment;
 import com.huole.music.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

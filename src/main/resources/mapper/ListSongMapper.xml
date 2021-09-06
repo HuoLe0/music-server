@@ -3,7 +3,7 @@
         "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huole.music.dao.ListSongMapper">
-    <resultMap id="BaseResultMap" type="com.huole.music.domain.ListSong" >
+    <resultMap id="BaseResultMap" type="com.huole.music.model.ListSong" >
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="song_id" jdbcType="INTEGER" property="songId"/>
         <result column="song_list_id" jdbcType="INTEGER" property="songListId"/>
@@ -18,7 +18,7 @@
         id,song_id,song_list_id
     </sql>
 
-    <insert id="insert" parameterType="com.huole.music.domain.ListSong">
+    <insert id="insert" parameterType="com.huole.music.model.ListSong">
         insert into list_song
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -44,7 +44,7 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.huole.music.domain.ListSong">
+    <update id="update" parameterType="com.huole.music.model.ListSong">
         update list_song
         <set>
 

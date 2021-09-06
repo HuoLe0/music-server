@@ -3,7 +3,7 @@
         "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huole.music.dao.CommentMapper">
-    <resultMap id="BaseResultMap" type="com.huole.music.domain.Comment" >
+    <resultMap id="BaseResultMap" type="com.huole.music.model.Comment" >
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="type" jdbcType="TINYINT" property="type"/>
@@ -18,7 +18,7 @@
         id,user_id,type,song_id,song_list_id,content,create_time,up
     </sql>
 
-    <insert id="insert" parameterType="com.huole.music.domain.Comment">
+    <insert id="insert" parameterType="com.huole.music.model.Comment">
         insert into comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -70,7 +70,7 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.huole.music.domain.Comment">
+    <update id="update" parameterType="com.huole.music.model.Comment">
         update comment
         <set>
             <if test="userId != null">
@@ -95,17 +95,17 @@
         where id = #{id}
     </update>
 
-    <delete id="delete" parameterType="com.huole.music.domain.Comment">
+    <delete id="delete" parameterType="com.huole.music.model.Comment">
         delete from comment
         where id=#{id}
     </delete>
 
-    <delete id="deleteBySongId" parameterType="com.huole.music.domain.Comment">
+    <delete id="deleteBySongId" parameterType="com.huole.music.model.Comment">
         delete from comment
         where song_id=#{songId}
     </delete>
 
-    <delete id="deleteBySongListId" parameterType="com.huole.music.domain.Comment">
+    <delete id="deleteBySongListId" parameterType="com.huole.music.model.Comment">
         delete from comment
         where song_list_id=#{songListId}
     </delete>

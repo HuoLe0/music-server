@@ -1,7 +1,7 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.ListSongMapper;
-import com.huole.music.domain.ListSong;
+import com.huole.music.model.ListSong;
 import com.huole.music.service.ListSongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,20 +2,16 @@ package com.huole.music.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.huole.music.domain.Singer;
-import com.huole.music.domain.Song;
-import com.huole.music.domain.Song;
+import com.huole.music.model.Song;
 import com.huole.music.service.SongService;
 import com.huole.music.utils.Consts;
 import com.huole.music.utils.RedisUtil;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;

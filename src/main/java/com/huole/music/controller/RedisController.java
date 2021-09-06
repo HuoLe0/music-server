@@ -1,6 +1,6 @@
 package com.huole.music.controller;
 
-import com.huole.music.domain.Song;
+import com.huole.music.model.Song;
 import com.huole.music.service.SongService;
 import com.huole.music.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
 /**

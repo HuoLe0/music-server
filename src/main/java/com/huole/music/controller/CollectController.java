@@ -1,7 +1,7 @@
 package com.huole.music.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.huole.music.domain.Collect;
+import com.huole.music.model.Collect;
 import com.huole.music.service.CollectService;
 import com.huole.music.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;

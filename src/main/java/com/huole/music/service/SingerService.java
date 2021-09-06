@@ -1,8 +1,7 @@
 package com.huole.music.service;
 
-import com.huole.music.domain.Pager;
-import com.huole.music.domain.Singer;
-import com.huole.music.domain.Song;
+import com.huole.music.model.Pager;
+import com.huole.music.model.Singer;
 
 import java.util.List;
 

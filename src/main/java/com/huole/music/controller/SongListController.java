@@ -1,9 +1,7 @@
 package com.huole.music.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.huole.music.domain.Song;
-import com.huole.music.domain.SongList;
-import com.huole.music.domain.SongList;
+import com.huole.music.model.SongList;
 import com.huole.music.service.SongListService;
 import com.huole.music.utils.Consts;
 import com.huole.music.utils.RedisUtil;
@@ -13,12 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**

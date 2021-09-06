@@ -2,18 +2,13 @@ package com.huole.music.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.huole.music.domain.ListSong;
-import com.huole.music.domain.Song;
+import com.huole.music.model.ListSong;
 import com.huole.music.service.ListSongService;
 import com.huole.music.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * 歌单歌曲管理controller

@@ -1,7 +1,7 @@
 package com.huole.music.dao;
 
-import com.huole.music.domain.Song;
-import com.huole.music.domain.SongList;
+import com.huole.music.model.Song;
+import com.huole.music.model.SongList;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

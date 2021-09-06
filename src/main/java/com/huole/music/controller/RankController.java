@@ -2,17 +2,11 @@ package com.huole.music.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.huole.music.domain.Rank;
+import com.huole.music.model.Rank;
 import com.huole.music.service.RankService;
 import com.huole.music.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * 评分管理controller

@@ -1,12 +1,11 @@
 package com.huole.music.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.huole.music.domain.Comment;
+import com.huole.music.model.Comment;
 import com.huole.music.service.CommentService;
 import com.huole.music.utils.Consts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 
 
 /**

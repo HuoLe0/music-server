@@ -1,7 +1,7 @@
 package com.huole.music.service.Impl;
 
 import com.huole.music.dao.RankMapper;
-import com.huole.music.domain.Rank;
+import com.huole.music.model.Rank;
 import com.huole.music.service.RankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

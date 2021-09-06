@@ -1,6 +1,6 @@
 package com.huole.music.service;
 
-import com.huole.music.domain.Consumer;
+import com.huole.music.model.Consumer;
 
 import java.util.List;
 

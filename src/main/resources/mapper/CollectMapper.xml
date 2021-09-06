@@ -3,7 +3,7 @@
         "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huole.music.dao.CollectMapper">
-    <resultMap id="BaseResultMap" type="com.huole.music.domain.Collect" >
+    <resultMap id="BaseResultMap" type="com.huole.music.model.Collect" >
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
         <result column="type" jdbcType="TINYINT" property="type"/>
@@ -17,7 +17,7 @@
         id,user_id,type,song_id,song_list_id,create_time
     </sql>
 
-    <insert id="insert" parameterType="com.huole.music.domain.Collect">
+    <insert id="insert" parameterType="com.huole.music.model.Collect">
         insert into collect
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -57,7 +57,7 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.huole.music.domain.Collect">
+    <update id="update" parameterType="com.huole.music.model.Collect">
         update collect
         <set>
             <if test="userId != null">
@@ -76,12 +76,12 @@
         where id = #{id}
     </update>
 
-    <delete id="delete" parameterType="com.huole.music.domain.Collect">
+    <delete id="delete" parameterType="com.huole.music.model.Collect">
         delete from collect
         where id=#{id}
     </delete>
 
-    <delete id="deleteByUserIdSongId" parameterType="com.huole.music.domain.Collect">
+    <delete id="deleteByUserIdSongId" parameterType="com.huole.music.model.Collect">
         delete from collect
         where user_id=#{userId} and song_id = #{songId}
     </delete>

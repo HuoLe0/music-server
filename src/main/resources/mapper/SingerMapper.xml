@@ -3,7 +3,7 @@
         "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huole.music.dao.SingerMapper">
-    <resultMap id="BaseResultMap" type="com.huole.music.domain.Singer" >
+    <resultMap id="BaseResultMap" type="com.huole.music.model.Singer" >
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="sex" jdbcType="TINYINT" property="sex"/>
@@ -17,7 +17,7 @@
         id,name,sex,pic,birth,location,introduction
     </sql>
 
-    <insert id="insert" parameterType="com.huole.music.domain.Singer">
+    <insert id="insert" parameterType="com.huole.music.model.Singer">
         insert into singer
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -67,7 +67,7 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.huole.music.domain.Singer">
+    <update id="update" parameterType="com.huole.music.model.Singer">
         update singer
         <set>
             <if test="id != null">
@@ -95,7 +95,7 @@
         where id = #{id}
     </update>
 
-    <delete id="delete" parameterType="com.huole.music.domain.Singer">
+    <delete id="delete" parameterType="com.huole.music.model.Singer">
         delete from singer
         where id=#{id}
     </delete>

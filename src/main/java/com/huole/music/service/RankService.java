@@ -1,8 +1,6 @@
 package com.huole.music.service;
 
-import com.huole.music.domain.Rank;
-
-import java.util.List;
+import com.huole.music.model.Rank;
 
 /**
  * 评分service接口

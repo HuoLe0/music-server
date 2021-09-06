@@ -1,6 +1,6 @@
 package com.huole.music.service;
 
-import com.huole.music.domain.Comment;
+import com.huole.music.model.Comment;
 
 import java.util.List;
 

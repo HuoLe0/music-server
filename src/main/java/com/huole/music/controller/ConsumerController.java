@@ -1,7 +1,7 @@
 package com.huole.music.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.huole.music.domain.Consumer;
+import com.huole.music.model.Consumer;
 import com.huole.music.service.ConsumerService;
 import com.huole.music.utils.Consts;
 import com.huole.music.utils.MD5Utils;
@@ -10,7 +10,6 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;

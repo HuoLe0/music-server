@@ -3,7 +3,7 @@
         "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huole.music.dao.SongMapper">
-    <resultMap id="BaseResultMap" type="com.huole.music.domain.Song" >
+    <resultMap id="BaseResultMap" type="com.huole.music.model.Song" >
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="singer_id" jdbcType="VARCHAR" property="singerId"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
@@ -15,7 +15,7 @@
         <result column="mv" jdbcType="VARCHAR" property="mv"/>
     </resultMap>
 
-    <resultMap id="ResultMapWithBLOBs" type="com.huole.music.domain.Song" extends="BaseResultMap">
+    <resultMap id="ResultMapWithBLOBs" type="com.huole.music.model.Song" extends="BaseResultMap">
         <result column="lyric" jdbcType="LONGVARCHAR" property="lyric"/>
     </resultMap>
 
@@ -27,7 +27,7 @@
         id,singer_id,name,introduction,create_time,update_time,pic,lyric,url,mv
     </sql>
 
-    <insert id="insert" parameterType="com.huole.music.domain.Song">
+    <insert id="insert" parameterType="com.huole.music.model.Song">
         insert into song
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -85,7 +85,7 @@
         </trim>
     </insert>
 
-    <update id="update" parameterType="com.huole.music.domain.Song">
+    <update id="update" parameterType="com.huole.music.model.Song">
         update song
         <set>
             <if test="singerId != null">
