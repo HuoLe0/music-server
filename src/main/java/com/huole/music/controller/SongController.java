@@ -185,10 +185,11 @@ public class SongController {
      * @return
      */
     @GetMapping("/selectRandom")
-    public Object selectRandom(Integer nums){
+    public Object selectRandom(Integer nums, Integer userId){
+        String userSong = userId == 9527 ? "youkeSong" : userId.toString() + "song";
         Calendar calendar = Calendar.getInstance();
         long ExpireTime = (24 - calendar.get(Calendar.HOUR)) * 3600L;
-        if (redisUtil.get("randomSong") == null){
+        if (redisUtil.get(userSong) == null){
             int num = nums == null ? 20 : nums;
             Set<Song> songs = new HashSet<>();
             List<Integer> songIds = songService.selectAllId();
@@ -203,7 +204,7 @@ public class SongController {
             for (Integer ID : songId){
                 songs.add(songService.selectById(ID));
             }
-            redisUtil.set("randomSong", songs, ExpireTime);
+            redisUtil.set(userSong, songs, ExpireTime);
             JSONObject result = new JSONObject();
             result.put("success", true);
             result.put("data", songs);
@@ -211,7 +212,7 @@ public class SongController {
         }else {
             JSONObject result = new JSONObject();
             result.put("success", true);
-            result.put("data", redisUtil.get("randomSong"));
+            result.put("data", redisUtil.get(userSong));
             return result;
         }
     }
