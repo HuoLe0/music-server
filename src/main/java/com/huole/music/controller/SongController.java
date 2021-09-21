@@ -1,10 +1,10 @@
 package com.huole.music.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
+import com.huole.music.model.ResultModel;
 import com.huole.music.model.Song;
 import com.huole.music.service.SongService;
-import com.huole.music.utils.Consts;
+import com.huole.music.utils.ResponseEnum;
 import com.huole.music.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
@@ -34,16 +34,20 @@ public class SongController {
      */
     @PostMapping("/add")
     public Object addSong(Integer singerId, String name, String introduction, String lyric, String mv, @RequestParam("pic") MultipartFile pic, @RequestParam("file") MultipartFile file) {
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         if (pic.isEmpty()) {
-            jsonObject.put(Consts.CODE, 0);
-            jsonObject.put(Consts.MSG, "图片上传失败");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.UPLOAD_IMAGE_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.UPLOAD_IMAGE_FAILED.getCode());
+            resultModel.setMsg(ResponseEnum.UPLOAD_IMAGE_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         if (file.isEmpty()) {
-            jsonObject.put(Consts.CODE, 0);
-            jsonObject.put(Consts.MSG, "文件上传失败");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.UPLOAD_IMAGE_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.UPLOAD_FILE_FAILED.getCode());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FILE_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         //文件名=当前时间（ms）+原来的文件名
         String filename = System.currentTimeMillis() + file.getOriginalFilename();
@@ -79,25 +83,27 @@ public class SongController {
             song.setMv(mv);
             boolean flag = songService.insert(song);
             if (flag) {//保存成功
-                jsonObject.put(Consts.CODE, 1);
-                jsonObject.put("success", true);
-                jsonObject.put(Consts.MSG, "上传成功");
-                jsonObject.put("avator", storeSongPath);
-                return jsonObject;
+                resultModel.setCode(ResponseEnum.UPLOAD_SUCCESS.getCode());
+                resultModel.setSuccess(ResponseEnum.UPLOAD_SUCCESS.isSuccess());
+                resultModel.setMsg(ResponseEnum.UPLOAD_SUCCESS.getMsg());
+                resultModel.setExt("avator" + storeSongPath);
+                resultModel.setTimestamp(System.currentTimeMillis()/1000);
+                return resultModel;
             }
-            jsonObject.put(Consts.CODE, 0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG, "上传失败");
-
-            return jsonObject;
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         } catch (IOException e) {
             e.printStackTrace();
-            jsonObject.put(Consts.CODE, 0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG, "上传失败" + e.getMessage());
-
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setExt(e.getMessage());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
         } finally {
-            return jsonObject;
+            return resultModel;
         }
     }
 
@@ -106,7 +112,7 @@ public class SongController {
      */
     @PostMapping("/update")
     public Object updateSong(Integer id, String name, String introduction, String lyric, String mv) {
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         //获取前端传来的参数
         Song song = new Song();
         song.setId(id);
@@ -117,15 +123,17 @@ public class SongController {
         songService.update(song);
         boolean flag = songService.update(song);
         if (flag) {//保存成功
-            jsonObject.put(Consts.CODE, 1);
-            jsonObject.put("success", true);
-            jsonObject.put(Consts.MSG, "上传成功");
-            return jsonObject;
+            resultModel.setCode(ResponseEnum.UPLOAD_SUCCESS.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_SUCCESS.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        jsonObject.put(Consts.CODE, 0);
-        jsonObject.put("success", false);
-        jsonObject.put(Consts.MSG, "上传失败");
-        return jsonObject;
+        resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+        resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+        resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -133,10 +141,13 @@ public class SongController {
      */
     @GetMapping("/selectAll")
     public Object selectAll(){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songService.selectAll());
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(songService.selectAll());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -144,10 +155,13 @@ public class SongController {
      */
     @GetMapping("/selectByPager")
     public Object selectByPager(Integer page, Integer size){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songService.selectByPager(page, size));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(songService.selectByPager(page, size));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -170,10 +184,13 @@ public class SongController {
      */
     @GetMapping("/selectById")
     public Object selectById(Integer id){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songService.selectById(id));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(songService.selectById(id));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -182,6 +199,7 @@ public class SongController {
      */
     @GetMapping("/selectRandom")
     public Object selectRandom(Integer nums, Integer userId){
+        ResultModel resultModel = new ResultModel();
         String userSong = userId == 9527 ? "youkeSong" : userId.toString() + "song";
         Calendar calendar = Calendar.getInstance();
         long ExpireTime = (24 - calendar.get(Calendar.HOUR)) * 3600L;
@@ -201,15 +219,19 @@ public class SongController {
                 songs.add(songService.selectById(ID));
             }
             redisUtil.set(userSong, songs, ExpireTime);
-            JSONObject result = new JSONObject();
-            result.put("success", true);
-            result.put("data", songs);
-            return result;
+            resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+            resultModel.setData(songs);
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }else {
-            JSONObject result = new JSONObject();
-            result.put("success", true);
-            result.put("data", redisUtil.get(userSong));
-            return result;
+            resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+            resultModel.setData(redisUtil.get(userSong));
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
     }
 
@@ -218,28 +240,38 @@ public class SongController {
      */
     @GetMapping("/selectByName")
     public Object selectByName(String name){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songService.selectByName(name));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        Object data = songService.selectByName(name);
+        resultModel.setData(data);
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     @GetMapping("/selectLikeName")
     public Object selectLikeName(String name){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songService.selectLikeName(name));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(songService.selectLikeName(name));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
     /**
      * 根据歌手id查询
      */
     @GetMapping("/selectBySingerId")
     public Object selectBySingerId(Integer singerId, Integer page, Integer size){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", songService.selectBySingerId(singerId, page, size));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(songService.selectBySingerId(singerId, page, size));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -247,16 +279,18 @@ public class SongController {
      */
     @PostMapping("/updateSongPic")
     public Object updateSongPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
+        ResultModel resultModel = new ResultModel();
         Song song = songService.selectById(id);
         String pic = "." + song.getPic();
         if (!pic.equals("./img/songPic/Jay.jpg")){
             FileSystemUtils.deleteRecursively(new File(pic));
         }
-        JSONObject jsonObject = new JSONObject();
         if (avatorFile.isEmpty()){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"文件上传失败");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FILE_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.UPLOAD_FILE_FAILED.getCode());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FILE_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         //文件名=当前时间（ms）+原来的文件名
         String filename = System.currentTimeMillis() + avatorFile.getOriginalFilename();
@@ -279,22 +313,26 @@ public class SongController {
             songService.update(song);
             boolean flag = songService.update(song);
             if (flag){//保存成功
-                jsonObject.put(Consts.CODE,1);
-                jsonObject.put(Consts.MSG,"修改成功");
-                jsonObject.put("pic",storeAvatorPath);
-                return jsonObject;
+                resultModel.setCode(ResponseEnum.UPLOAD_SUCCESS.getCode());
+                resultModel.setSuccess(ResponseEnum.UPLOAD_SUCCESS.isSuccess());
+                resultModel.setMsg(ResponseEnum.UPLOAD_SUCCESS.getMsg());
+                resultModel.setExt("avator" + storeAvatorPath);
+                resultModel.setTimestamp(System.currentTimeMillis()/1000);
+                return resultModel;
             }
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"修改失败");
-
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.ERROR.isSuccess());
+            resultModel.setCode(ResponseEnum.ERROR.getCode());
+            resultModel.setMsg(ResponseEnum.ERROR.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         } catch (IOException e) {
             e.printStackTrace();
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
-
+            resultModel.setSuccess(ResponseEnum.ERROR.isSuccess());
+            resultModel.setCode(ResponseEnum.ERROR.getCode());
+            resultModel.setMsg(e.getMessage());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
         }finally {
-            return jsonObject;
+            return resultModel;
         }
     }
 
@@ -309,11 +347,13 @@ public class SongController {
         System.out.println(url);
         FileSystemUtils.deleteRecursively(new File(url));
 
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         if (avatorFile.isEmpty()){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"文件上传失败");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FILE_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.UPLOAD_FILE_FAILED.getCode());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FILE_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         //文件名=当前时间（ms）+原来的文件名
         String filename = System.currentTimeMillis() + avatorFile.getOriginalFilename();
@@ -335,25 +375,26 @@ public class SongController {
             songService.update(song);
             boolean flag = songService.update(song);
             if (flag){//保存成功
-                jsonObject.put(Consts.CODE,1);
-                jsonObject.put("success", true);
-                jsonObject.put(Consts.MSG,"修改成功");
-                jsonObject.put("avator",storeAvatorPath);
-                return jsonObject;
+                resultModel.setCode(ResponseEnum.UPLOAD_SUCCESS.getCode());
+                resultModel.setSuccess(ResponseEnum.UPLOAD_SUCCESS.isSuccess());
+                resultModel.setMsg(ResponseEnum.UPLOAD_SUCCESS.getMsg());
+                resultModel.setExt("avator" + storeAvatorPath);
+                resultModel.setTimestamp(System.currentTimeMillis()/1000);
+                return resultModel;
             }
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"修改失败");
-
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FILE_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.UPLOAD_FILE_FAILED.getCode());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FILE_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         } catch (IOException e) {
             e.printStackTrace();
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
-
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FILE_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.UPLOAD_FILE_FAILED.getCode());
+            resultModel.setMsg(e.getMessage());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
         }finally {
-            return jsonObject;
+            return resultModel;
         }
     }
 }

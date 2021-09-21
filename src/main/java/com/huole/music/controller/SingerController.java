@@ -1,9 +1,9 @@
 package com.huole.music.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.huole.music.model.ResultModel;
 import com.huole.music.model.Singer;
 import com.huole.music.service.SingerService;
-import com.huole.music.utils.Consts;
+import com.huole.music.utils.ResponseEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +26,13 @@ public class SingerController {
     @Autowired
     private SingerService singerService;
 
+
     /**
      * 添加歌手
      */
     @PostMapping("/add")
     public Object addSinger(String name, Byte sex, String pic, String birth, String location, String introduction){
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         //把生日转换成Date格式
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date birthDate = new Date();
@@ -50,13 +51,17 @@ public class SingerController {
         singer.setIntroduction(introduction);
         boolean flag = singerService.insert(singer);
         if (flag){//保存成功
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put(Consts.MSG,"添加成功");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.ADD_SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.ADD_SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.ADD_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put(Consts.MSG,"添加失败");
-        return jsonObject;
+        resultModel.setSuccess(ResponseEnum.ADD_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.ADD_FAILED.getCode());
+        resultModel.setMsg(ResponseEnum.ADD_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -64,7 +69,7 @@ public class SingerController {
      */
     @PostMapping("/update")
     public Object updateSinger(Integer id, String name, Byte sex, String pic, String birth, String location, String introduction){
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         //把生日转换成Date格式
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date birthDate = new Date();
@@ -83,13 +88,17 @@ public class SingerController {
         singer.setIntroduction(introduction);
         boolean flag = singerService.update(singer);
         if (flag){//保存成功
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put(Consts.MSG,"修改成功");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.MODIFY_SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.MODIFY_SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.MODIFY_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put(Consts.MSG,"修改失败");
-        return jsonObject;
+        resultModel.setSuccess(ResponseEnum.MODIFY_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.MODIFY_FAILED.getCode());
+        resultModel.setMsg(ResponseEnum.MODIFY_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -108,10 +117,13 @@ public class SingerController {
      */
     @GetMapping("/selectById")
     public Object selectById(Integer id){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", singerService.selectById(id));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(singerService.selectById(id));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -119,22 +131,27 @@ public class SingerController {
      */
     @GetMapping("/selectAll")
     public Object selectAll(){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", singerService.selectAll());
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(singerService.selectAll());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
      * 查询所有歌手--分页
-     * @return
      */
     @GetMapping("/selectByPager")
     public Object selectByPager(Integer page, Integer size){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", singerService.selectByPager(page, size));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(singerService.selectByPager(page, size));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -142,10 +159,13 @@ public class SingerController {
      */
     @GetMapping("/selectTen")
     public Object selectTen(){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", singerService.selectTen());
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(singerService.selectTen());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -153,10 +173,13 @@ public class SingerController {
      */
     @GetMapping("/selectLikeName")
     public Object selectLikeName(String name){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", singerService.selectLikeName(name));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(singerService.selectLikeName(name));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -164,10 +187,13 @@ public class SingerController {
      */
     @GetMapping("/selectBySex")
     public Object selectBySex(Integer sex, Integer page, Integer size){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", singerService.selectBySex(sex, page, size));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setData(singerService.selectBySex(sex, page, size));
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -175,17 +201,18 @@ public class SingerController {
      */
     @PostMapping("/updateSingerPic")
     public Object updateSingerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
+        ResultModel resultModel = new ResultModel();
         Singer singer = singerService.selectById(id);
         String url = "." + singer.getPic();
         if (!url.equals("./img/singerPic/user.jpg")){
             FileSystemUtils.deleteRecursively(new File(url));
         }
-        JSONObject jsonObject = new JSONObject();
         if (avatorFile.isEmpty()){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"文件上传失败");
-            return jsonObject;
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         //文件名=当前时间（ms）+原来的文件名
         String filename = System.currentTimeMillis() + avatorFile.getOriginalFilename();
@@ -208,25 +235,27 @@ public class SingerController {
             singerService.update(singer);
             boolean flag = singerService.update(singer);
             if (flag){//保存成功
-                jsonObject.put(Consts.CODE,1);
-                jsonObject.put("success", true);
-                jsonObject.put(Consts.MSG,"修改成功");
-                jsonObject.put("pic",storeAvatorPath);
-                return jsonObject;
+                resultModel.setCode(ResponseEnum.UPLOAD_SUCCESS.getCode());
+                resultModel.setSuccess(ResponseEnum.UPLOAD_SUCCESS.isSuccess());
+                resultModel.setMsg(ResponseEnum.UPLOAD_SUCCESS.getMsg());
+                resultModel.setExt("avator" + avatorFile);
+                resultModel.setTimestamp(System.currentTimeMillis()/1000);
+                return resultModel;
             }
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"修改失败");
-
-            return jsonObject;
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         } catch (IOException e) {
             e.printStackTrace();
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
 
         }finally {
-            return jsonObject;
+            return resultModel;
         }
     }
 }
