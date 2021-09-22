@@ -3,7 +3,9 @@ package com.huole.music.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.huole.music.model.Collect;
 import com.huole.music.service.CollectService;
+import com.huole.music.service.ReturnService;
 import com.huole.music.utils.Consts;
+import com.huole.music.utils.ResponseEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,9 @@ public class CollectController {
     @Autowired
     private CollectService collectService;
 
+    @Autowired
+    private ReturnService returnService;
+
     /**
      * 添加收藏
      * @param userId
@@ -30,16 +35,19 @@ public class CollectController {
      */
     @PostMapping("/add")
     public Object addCollect(Integer userId, Byte type, Integer songId){
-        JSONObject jsonObject = new JSONObject();
         if(songId==null){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"收藏歌曲为空");
-            return jsonObject;
+            returnService.setSuccess(ResponseEnum.COLLECT_FAILED.isSuccess());
+            returnService.setCode(ResponseEnum.COLLECT_FAILED.getCode());
+            returnService.setMsg(ResponseEnum.COLLECT_FAILED.getMsg());
+            returnService.setTimestamp(System.currentTimeMillis()/1000);
+            return returnService.getReturnValue();
         }
         if(collectService.existSongId(userId ,songId)){
-            jsonObject.put(Consts.CODE,2);
-            jsonObject.put(Consts.MSG,"您已收藏该歌曲");
-            return jsonObject;
+            returnService.setSuccess(ResponseEnum.COLLECT_REPEATED.isSuccess());
+            returnService.setCode(ResponseEnum.COLLECT_REPEATED.getCode());
+            returnService.setMsg(ResponseEnum.COLLECT_REPEATED.getMsg());
+            returnService.setTimestamp(System.currentTimeMillis()/1000);
+            return returnService.getReturnValue();
         }
         //保存到收藏对象中
         Collect collect = new Collect();
@@ -48,13 +56,17 @@ public class CollectController {
         collect.setSongId(songId);
         boolean flag = collectService.insert(collect);
         if (flag){//保存成功
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put(Consts.MSG,"收藏成功");
-            return jsonObject;
+            returnService.setSuccess(ResponseEnum.COLLECT_SUCCESS.isSuccess());
+            returnService.setCode(ResponseEnum.COLLECT_SUCCESS.getCode());
+            returnService.setMsg(ResponseEnum.COLLECT_SUCCESS.getMsg());
+            returnService.setTimestamp(System.currentTimeMillis()/1000);
+            return returnService.getReturnValue();
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put(Consts.MSG,"收藏失败");
-        return jsonObject;
+        returnService.setSuccess(ResponseEnum.COLLECT_FAILED.isSuccess());
+        returnService.setCode(ResponseEnum.COLLECT_FAILED.getCode());
+        returnService.setMsg(ResponseEnum.COLLECT_FAILED.getMsg());
+        returnService.setTimestamp(System.currentTimeMillis()/1000);
+        return returnService.getReturnValue();
     }
 
     /**
@@ -68,8 +80,6 @@ public class CollectController {
      */
     @PostMapping("/update")
     public Object updateCollect(Integer id, Integer userId, Byte type, Integer songId, Integer songListId){
-        JSONObject jsonObject = new JSONObject();
-
         //保存到收藏对象中
         Collect collect = new Collect();
         collect.setId(id);
@@ -83,13 +93,17 @@ public class CollectController {
         }
         boolean flag = collectService.update(collect);
         if (flag){//保存成功
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put(Consts.MSG,"修改成功");
-            return jsonObject;
+            returnService.setCode(ResponseEnum.MODIFY_SUCCESS.getCode());
+            returnService.setSuccess(ResponseEnum.MODIFY_SUCCESS.isSuccess());
+            returnService.setMsg(ResponseEnum.MODIFY_SUCCESS.getMsg());
+            returnService.setTimestamp(System.currentTimeMillis()/1000);
+            return returnService.getReturnValue();
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put(Consts.MSG,"修改失败");
-        return jsonObject;
+        returnService.setSuccess(ResponseEnum.MODIFY_FAILED.isSuccess());
+        returnService.setCode(ResponseEnum.MODIFY_FAILED.getCode());
+        returnService.setMsg(ResponseEnum.MODIFY_FAILED.getMsg());
+        returnService.setTimestamp(System.currentTimeMillis()/1000);
+        return returnService.getReturnValue();
     }
 
     /**

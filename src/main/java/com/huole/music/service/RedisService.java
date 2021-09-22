@@ -22,7 +22,4 @@ public interface RedisService {
     public Set getSetKey(String key);
     public List getListKey(String key);
 
-
-
-
 }
