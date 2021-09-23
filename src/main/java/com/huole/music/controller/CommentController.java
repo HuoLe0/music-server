@@ -1,10 +1,8 @@
 package com.huole.music.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.huole.music.model.Comment;
+import com.huole.music.model.ResultModel;
 import com.huole.music.service.CommentService;
-import com.huole.music.service.ReturnService;
-import com.huole.music.utils.Consts;
 import com.huole.music.utils.ResponseEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +18,6 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @Autowired
-    private ReturnService returnService;
 
     /**
      * 添加评论
@@ -34,6 +30,7 @@ public class CommentController {
      */
     @PostMapping("/add")
     public Object addComment(Integer userId, String type, Integer songId, Integer songListId, String content){
+        ResultModel resultModel = new ResultModel();
         //保存到评论对象中
         Comment comment = new Comment();
         comment.setUserId(userId);
@@ -44,26 +41,26 @@ public class CommentController {
             comment.setSongListId(songListId);
         }
         if(content == null || content.equals("")){
-            returnService.setSuccess(ResponseEnum.COMMENT_NULL.isSuccess());
-            returnService.setCode(ResponseEnum.COMMENT_NULL.getCode());
-            returnService.setMsg(ResponseEnum.COMMENT_NULL.getMsg());
-            returnService.setTimestamp(System.currentTimeMillis()/1000);
-            return returnService.getReturnValue();
+            resultModel.setSuccess(ResponseEnum.COMMENT_NULL.isSuccess());
+            resultModel.setCode(ResponseEnum.COMMENT_NULL.getCode());
+            resultModel.setMsg(ResponseEnum.COMMENT_NULL.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         comment.setContent(content);
         boolean flag = commentService.insert(comment);
         if (flag){//保存成功
-            returnService.setSuccess(ResponseEnum.COMMENT_SUCCESS.isSuccess());
-            returnService.setCode(ResponseEnum.COMMENT_SUCCESS.getCode());
-            returnService.setMsg(ResponseEnum.COMMENT_SUCCESS.getMsg());
-            returnService.setTimestamp(System.currentTimeMillis()/1000);
-            return returnService.getReturnValue();
+            resultModel.setSuccess(ResponseEnum.COMMENT_SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.COMMENT_SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.COMMENT_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        returnService.setSuccess(ResponseEnum.COMMENT_FAILED.isSuccess());
-        returnService.setCode(ResponseEnum.COMMENT_FAILED.getCode());
-        returnService.setMsg(ResponseEnum.COMMENT_FAILED.getMsg());
-        returnService.setTimestamp(System.currentTimeMillis()/1000);
-        return returnService.getReturnValue();
+        resultModel.setSuccess(ResponseEnum.COMMENT_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.COMMENT_FAILED.getCode());
+        resultModel.setMsg(ResponseEnum.COMMENT_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -79,6 +76,7 @@ public class CommentController {
      */
     @PostMapping("/update")
     public Object updateComment(Integer id, Integer userId, String type, Integer songId, Integer songListId, String content, Integer up){
+        ResultModel resultModel = new ResultModel();
         //保存到评论对象中
         Comment comment = new Comment();
         comment.setId(id);
@@ -94,17 +92,17 @@ public class CommentController {
         comment.setUp(up);//点赞数
         boolean flag = commentService.update(comment);
         if (flag){//保存成功
-            returnService.setCode(ResponseEnum.MODIFY_SUCCESS.getCode());
-            returnService.setSuccess(ResponseEnum.MODIFY_SUCCESS.isSuccess());
-            returnService.setMsg(ResponseEnum.MODIFY_SUCCESS.getMsg());
-            returnService.setTimestamp(System.currentTimeMillis()/1000);
-            return returnService.getReturnValue();
+            resultModel.setCode(ResponseEnum.MODIFY_SUCCESS.getCode());
+            resultModel.setSuccess(ResponseEnum.MODIFY_SUCCESS.isSuccess());
+            resultModel.setMsg(ResponseEnum.MODIFY_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        returnService.setSuccess(ResponseEnum.MODIFY_FAILED.isSuccess());
-        returnService.setCode(ResponseEnum.MODIFY_FAILED.getCode());
-        returnService.setMsg(ResponseEnum.MODIFY_FAILED.getMsg());
-        returnService.setTimestamp(System.currentTimeMillis()/1000);
-        return returnService.getReturnValue();
+        resultModel.setSuccess(ResponseEnum.MODIFY_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.MODIFY_FAILED.getCode());
+        resultModel.setMsg(ResponseEnum.MODIFY_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -165,18 +163,22 @@ public class CommentController {
      */
     @PostMapping("/like")
     public Object like(Integer id, Integer up){
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         Comment comment = new Comment();
         comment.setId(id);
         comment.setUp(up);
         boolean flag = commentService.update(comment);
         if (flag){//保存成功
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put(Consts.MSG,"点赞成功");
-            return jsonObject;
+            resultModel.setCode(ResponseEnum.LIKE_SUCCESS.getCode());
+            resultModel.setSuccess(ResponseEnum.LIKE_SUCCESS.isSuccess());
+            resultModel.setMsg(ResponseEnum.LIKE_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put(Consts.MSG,"点赞失败");
-        return jsonObject;
+        resultModel.setCode(ResponseEnum.LIKE_FAILED.getCode());
+        resultModel.setSuccess(ResponseEnum.LIKE_FAILED.isSuccess());
+        resultModel.setMsg(ResponseEnum.LIKE_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 }

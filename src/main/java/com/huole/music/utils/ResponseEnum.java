@@ -21,7 +21,9 @@ public enum ResponseEnum {
     UPLOAD_IMAGE_FAILED("upload_image_fail", "图片上传失败", 1000, false),
     UPLOAD_FILE_FAILED("upload_file_fail", "文件上传失败", 1001, false),
     ADD_SUCCESS("add_success", "添加成功", 1, true),
-    ADD_FAILED("add_failed", "添加失败", -1, false),;
+    ADD_FAILED("add_failed", "添加失败", -1, false),
+    LIKE_SUCCESS("like_success", "点赞成功", 1, true),
+    LIKE_FAILED("like_failed", "点赞失败", -1, false),;
 
     // 成员变量
     private String name;

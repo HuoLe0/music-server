@@ -1,10 +1,8 @@
 package com.huole.music.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.huole.music.model.Collect;
+import com.huole.music.model.ResultModel;
 import com.huole.music.service.CollectService;
-import com.huole.music.service.ReturnService;
-import com.huole.music.utils.Consts;
 import com.huole.music.utils.ResponseEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +21,6 @@ public class CollectController {
     @Autowired
     private CollectService collectService;
 
-    @Autowired
-    private ReturnService returnService;
-
     /**
      * 添加收藏
      * @param userId
@@ -35,19 +30,20 @@ public class CollectController {
      */
     @PostMapping("/add")
     public Object addCollect(Integer userId, Byte type, Integer songId){
+        ResultModel resultModel = new ResultModel();
         if(songId==null){
-            returnService.setSuccess(ResponseEnum.COLLECT_FAILED.isSuccess());
-            returnService.setCode(ResponseEnum.COLLECT_FAILED.getCode());
-            returnService.setMsg(ResponseEnum.COLLECT_FAILED.getMsg());
-            returnService.setTimestamp(System.currentTimeMillis()/1000);
-            return returnService.getReturnValue();
+            resultModel.setSuccess(ResponseEnum.COLLECT_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.COLLECT_FAILED.getCode());
+            resultModel.setMsg(ResponseEnum.COLLECT_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         if(collectService.existSongId(userId ,songId)){
-            returnService.setSuccess(ResponseEnum.COLLECT_REPEATED.isSuccess());
-            returnService.setCode(ResponseEnum.COLLECT_REPEATED.getCode());
-            returnService.setMsg(ResponseEnum.COLLECT_REPEATED.getMsg());
-            returnService.setTimestamp(System.currentTimeMillis()/1000);
-            return returnService.getReturnValue();
+            resultModel.setSuccess(ResponseEnum.COLLECT_REPEATED.isSuccess());
+            resultModel.setCode(ResponseEnum.COLLECT_REPEATED.getCode());
+            resultModel.setMsg(ResponseEnum.COLLECT_REPEATED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         //保存到收藏对象中
         Collect collect = new Collect();
@@ -56,17 +52,17 @@ public class CollectController {
         collect.setSongId(songId);
         boolean flag = collectService.insert(collect);
         if (flag){//保存成功
-            returnService.setSuccess(ResponseEnum.COLLECT_SUCCESS.isSuccess());
-            returnService.setCode(ResponseEnum.COLLECT_SUCCESS.getCode());
-            returnService.setMsg(ResponseEnum.COLLECT_SUCCESS.getMsg());
-            returnService.setTimestamp(System.currentTimeMillis()/1000);
-            return returnService.getReturnValue();
+            resultModel.setSuccess(ResponseEnum.COLLECT_SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.COLLECT_SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.COLLECT_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        returnService.setSuccess(ResponseEnum.COLLECT_FAILED.isSuccess());
-        returnService.setCode(ResponseEnum.COLLECT_FAILED.getCode());
-        returnService.setMsg(ResponseEnum.COLLECT_FAILED.getMsg());
-        returnService.setTimestamp(System.currentTimeMillis()/1000);
-        return returnService.getReturnValue();
+        resultModel.setSuccess(ResponseEnum.COLLECT_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.COLLECT_FAILED.getCode());
+        resultModel.setMsg(ResponseEnum.COLLECT_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -80,6 +76,7 @@ public class CollectController {
      */
     @PostMapping("/update")
     public Object updateCollect(Integer id, Integer userId, Byte type, Integer songId, Integer songListId){
+        ResultModel resultModel = new ResultModel();
         //保存到收藏对象中
         Collect collect = new Collect();
         collect.setId(id);
@@ -93,17 +90,17 @@ public class CollectController {
         }
         boolean flag = collectService.update(collect);
         if (flag){//保存成功
-            returnService.setCode(ResponseEnum.MODIFY_SUCCESS.getCode());
-            returnService.setSuccess(ResponseEnum.MODIFY_SUCCESS.isSuccess());
-            returnService.setMsg(ResponseEnum.MODIFY_SUCCESS.getMsg());
-            returnService.setTimestamp(System.currentTimeMillis()/1000);
-            return returnService.getReturnValue();
+            resultModel.setCode(ResponseEnum.MODIFY_SUCCESS.getCode());
+            resultModel.setSuccess(ResponseEnum.MODIFY_SUCCESS.isSuccess());
+            resultModel.setMsg(ResponseEnum.MODIFY_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        returnService.setSuccess(ResponseEnum.MODIFY_FAILED.isSuccess());
-        returnService.setCode(ResponseEnum.MODIFY_FAILED.getCode());
-        returnService.setMsg(ResponseEnum.MODIFY_FAILED.getMsg());
-        returnService.setTimestamp(System.currentTimeMillis()/1000);
-        return returnService.getReturnValue();
+        resultModel.setSuccess(ResponseEnum.MODIFY_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.MODIFY_FAILED.getCode());
+        resultModel.setMsg(ResponseEnum.MODIFY_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
