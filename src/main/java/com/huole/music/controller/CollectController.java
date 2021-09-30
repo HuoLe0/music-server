@@ -129,7 +129,13 @@ public class CollectController {
      */
     @GetMapping("/selectAll")
     public Object selectAll(){
-        return collectService.selectAll();
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(collectService.selectAll());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -139,7 +145,13 @@ public class CollectController {
      */
     @GetMapping("/selectByUserId")
     public Object selectByUserId(Integer userId){
-        return collectService.selectByUserId(userId);
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(collectService.selectByUserId(userId));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
 }

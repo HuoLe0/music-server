@@ -130,7 +130,13 @@ public class CommentController {
      */
     @GetMapping("/selectById")
     public Object selectByPrimaryKey(Integer id){
-        return commentService.selectById(id);
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(commentService.selectById(id));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -138,7 +144,13 @@ public class CommentController {
      */
     @GetMapping("/allComment")
     public Object allComment(){
-        return commentService.allComment();
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(commentService.allComment());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -146,7 +158,13 @@ public class CommentController {
      */
     @GetMapping("/commentOfSongId")
     public Object commentOfSongId(Integer songId){
-        return commentService.commentOfSongId(songId);
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(commentService.commentOfSongId(songId));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -154,7 +172,13 @@ public class CommentController {
      */
     @GetMapping("/commentOfSongListId")
     public Object commentOfSex(Integer songListId){
-        return commentService.commentOfSongListId(songListId);
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(commentService.commentOfSongListId(songListId));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
 

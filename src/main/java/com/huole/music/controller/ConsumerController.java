@@ -2,9 +2,11 @@ package com.huole.music.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.huole.music.model.Consumer;
+import com.huole.music.model.ResultModel;
 import com.huole.music.service.ConsumerService;
 import com.huole.music.utils.Consts;
 import com.huole.music.utils.MD5Utils;
+import com.huole.music.utils.ResponseEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.bind.annotation.*;
@@ -33,25 +35,30 @@ public class ConsumerController {
      */
     @PostMapping("/add")
     public Object addConsumer(String username, String password, String sex, String phoneNum, String email, String birth, String introduction, String location, String avator){
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         password = MD5Utils.code(password);
         if (username == null || username.equals("")){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"用户名不能为空");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.ERROR.isSuccess());
+            resultModel.setCode(ResponseEnum.ERROR.getCode());
+            resultModel.setMsg("用户名不能为空");
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-
         List<Consumer> consumer1 = consumerService.selectByName(username);
         if (!consumer1.isEmpty()){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"用户名已存在");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.ERROR.isSuccess());
+            resultModel.setCode(ResponseEnum.ERROR.getCode());
+            resultModel.setMsg("用户名已存在");
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
 
         if (password == null || password.equals("")){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put(Consts.MSG,"密码不能为空");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.ERROR.isSuccess());
+            resultModel.setCode(ResponseEnum.ERROR.getCode());
+            resultModel.setMsg("密码不能为空");
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
 
         //把生日转换成Date格式
@@ -76,13 +83,17 @@ public class ConsumerController {
         boolean flag = consumerService.insert(consumer);
         System.out.println(flag);
         if (flag){//保存成功
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put(Consts.MSG,"添加成功");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put(Consts.MSG,"添加失败");
-        return jsonObject;
+        resultModel.setSuccess(ResponseEnum.ERROR.isSuccess());
+        resultModel.setCode(ResponseEnum.ERROR.getCode());
+        resultModel.setMsg("注册失败");
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -90,7 +101,7 @@ public class ConsumerController {
      */
     @PostMapping("/update")
     public Object updateConsumer(Integer id, String username, String password, String sex, String phoneNum, String email, String birth, String introduction, String location, String avator){
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         password = MD5Utils.code(password);
         //把生日转换成Date格式
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -113,13 +124,19 @@ public class ConsumerController {
         consumer.setIntroduction(introduction);
         boolean flag = consumerService.update(consumer);
         if (flag){//保存成功
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put(Consts.MSG,"修改成功");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.MODIFY_SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.MODIFY_SUCCESS.getCode());
+            resultModel.setData(username);
+            resultModel.setMsg(ResponseEnum.MODIFY_SUCCESS.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put(Consts.MSG,"修改失败");
-        return jsonObject;
+        resultModel.setSuccess(ResponseEnum.MODIFY_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.MODIFY_FAILED.getCode());
+        resultModel.setData(username);
+        resultModel.setMsg(ResponseEnum.MODIFY_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -139,10 +156,13 @@ public class ConsumerController {
      */
     @GetMapping("/selectById")
     public Object selectById(Integer id){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", consumerService.selectById(id));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(consumerService.selectById(id));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -150,10 +170,13 @@ public class ConsumerController {
      */
     @GetMapping("/selectAll")
     public Object selectAll(){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", consumerService.selectAll());
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(consumerService.selectAll());
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -161,30 +184,39 @@ public class ConsumerController {
      */
     @GetMapping("/selectByName")
     public Object selectByName(String username){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", consumerService.selectByName(username));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(consumerService.selectByName(username));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
     /**
      * 根据名字模糊查询列表
      */
     @GetMapping("/selectLikeName")
     public Object selectLikeName(String username){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", consumerService.selectLikeName(username));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(consumerService.selectLikeName(username));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
     /**
      * 根据电话查询列表
      */
     @GetMapping("/selectByPhoneNum")
     public Object selectByPhoneNum(String phoneNum){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", consumerService.selectByPhoneNum(phoneNum));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(consumerService.selectByPhoneNum(phoneNum));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -192,28 +224,32 @@ public class ConsumerController {
      */
     @GetMapping("/verifyPassword")
     public Object verifyPassword(String username, String password){
-        JSONObject result = new JSONObject();
-        result.put("success", true);
-        result.put("data", consumerService.verifyPassword(username,password));
-        return result;
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(consumerService.verifyPassword(username,password));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
-     * 更新歌手图片
+     * 更新用户图片
      */
     @PostMapping("/updateConsumerAvator")
     public Object updateConsumerPic(@RequestParam("file") MultipartFile avatorFile, @RequestParam("id") int id){
+        ResultModel resultModel = new ResultModel();
         Consumer consumer = consumerService.selectById(id);
         String url = "." + consumer.getAvator();
         if (!url.equals("./img/consumerAvator/user.jpg")){
             FileSystemUtils.deleteRecursively(new File(url));
         }
-        JSONObject jsonObject = new JSONObject();
         if (avatorFile.isEmpty()){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", true);
-            jsonObject.put(Consts.MSG,"文件上传失败");
-            return jsonObject;
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         //文件名=当前时间（ms）+原来的文件名
         String filename = System.currentTimeMillis() + avatorFile.getOriginalFilename();
@@ -236,42 +272,46 @@ public class ConsumerController {
             consumerService.update(consumer);
             boolean flag = consumerService.update(consumer);
             if (flag){//保存成功
-                jsonObject.put(Consts.CODE,1);
-                jsonObject.put("success", true);
-                jsonObject.put(Consts.MSG,"修改成功");
-                jsonObject.put("pic",storeAvatorPath);
-                return jsonObject;
+                resultModel.setCode(ResponseEnum.UPLOAD_SUCCESS.getCode());
+                resultModel.setSuccess(ResponseEnum.UPLOAD_SUCCESS.isSuccess());
+                resultModel.setMsg(ResponseEnum.UPLOAD_SUCCESS.getMsg());
+                resultModel.setExt("avator" + storeAvatorPath);
+                resultModel.setTimestamp(System.currentTimeMillis()/1000);
+                return resultModel;
             }
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"修改失败");
-
-            return jsonObject;
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         } catch (IOException e) {
             e.printStackTrace();
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"修改失败"+e.getMessage());
+            resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
+            resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
+            resultModel.setMsg(e.getMessage());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
         }finally {
-            return jsonObject;
+            return resultModel;
         }
     }
 
     @PostMapping("/login")
     public Object Login(String username, String password){
         password = MD5Utils.code(password);
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         if (username == null || username.equals("")){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"用户名不能为空");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.LOGIN_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.LOGIN_FAILED.getCode());
+            resultModel.setMsg("用户名不能为空");
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
         if (password == null || password.equals("")){
-            jsonObject.put(Consts.CODE,0);
-            jsonObject.put("success", false);
-            jsonObject.put(Consts.MSG,"密码不能为空");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.LOGIN_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.LOGIN_FAILED.getCode());
+            resultModel.setMsg("密码不能为空");
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
 
         Consumer consumer = new Consumer();
@@ -279,15 +319,17 @@ public class ConsumerController {
         consumer.setPassword(password);
         boolean flag = consumerService.verifyPassword(username,password);
         if (flag){
-            jsonObject.put(Consts.CODE,1);
-            jsonObject.put("success", true);
-            jsonObject.put(Consts.MSG,"登陆成功");
-            jsonObject.put("userMsg",consumerService.selectByName(username));
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.LOGIN_SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.LOGIN_SUCCESS.getCode());
+            resultModel.setMsg(ResponseEnum.LOGIN_SUCCESS.getMsg());
+            resultModel.setData(consumerService.selectByName(username));
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
-        jsonObject.put(Consts.CODE,0);
-        jsonObject.put("success",false);
-        jsonObject.put(Consts.MSG,"登陆失败");
-        return jsonObject;
+        resultModel.setSuccess(ResponseEnum.LOGIN_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.LOGIN_FAILED.getCode());
+        resultModel.setMsg(ResponseEnum.LOGIN_FAILED.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 }

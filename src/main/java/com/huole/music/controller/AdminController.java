@@ -26,12 +26,14 @@ public class AdminController {
         boolean flag = adminService.verifyPassword(name,password);
         if (flag){
             resultModel.setSuccess(ResponseEnum.LOGIN_SUCCESS.isSuccess());
+            resultModel.setCode(ResponseEnum.LOGIN_SUCCESS.getCode());
             resultModel.setMsg(ResponseEnum.LOGIN_SUCCESS.getMsg());
             resultModel.setTimestamp(System.currentTimeMillis()/1000);
             session.setAttribute(Consts.NAME,name);
             return resultModel;
         }
         resultModel.setSuccess(ResponseEnum.LOGIN_FAILED.isSuccess());
+        resultModel.setCode(ResponseEnum.LOGIN_FAILED.getCode());
         resultModel.setMsg(ResponseEnum.LOGIN_FAILED.getMsg());
         resultModel.setTimestamp(System.currentTimeMillis()/1000);
         return resultModel;

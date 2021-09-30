@@ -3,8 +3,10 @@ package com.huole.music.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.huole.music.model.Rank;
+import com.huole.music.model.ResultModel;
 import com.huole.music.service.RankService;
 import com.huole.music.utils.Consts;
+import com.huole.music.utils.ResponseEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +25,7 @@ public class RankController {
      */
     @PostMapping("/add")
     public Object addRank(Integer songListId, Integer consumerId, Integer score) {
-        JSONObject jsonObject = new JSONObject();
+        ResultModel resultModel = new ResultModel();
         Rank rank = new Rank();
         boolean flag1 = rankService.verifyRank(songListId,consumerId);
         if (!flag1){
@@ -32,17 +34,23 @@ public class RankController {
             rank.setScore(score);
             boolean flag = rankService.insert(rank);
             if (flag) {//保存成功
-                jsonObject.put(Consts.CODE, 1);
-                jsonObject.put(Consts.MSG, "评价成功");
-                return jsonObject;
+                resultModel.setSuccess(ResponseEnum.RANK_SUCCESS.isSuccess());
+                resultModel.setCode(ResponseEnum.RANK_SUCCESS.getCode());
+                resultModel.setMsg(ResponseEnum.RANK_SUCCESS.getMsg());
+                resultModel.setTimestamp(System.currentTimeMillis()/1000);
+                return resultModel;
             }
-            jsonObject.put(Consts.CODE, 0);
-            jsonObject.put(Consts.MSG, "评价失败");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.RANK_FAILED.isSuccess());
+            resultModel.setCode(ResponseEnum.RANK_FAILED.getCode());
+            resultModel.setMsg(ResponseEnum.RANK_FAILED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }else {
-            jsonObject.put(Consts.CODE, 0);
-            jsonObject.put(Consts.MSG, "请勿重复评价！");
-            return jsonObject;
+            resultModel.setSuccess(ResponseEnum.RANK_REPEATED.isSuccess());
+            resultModel.setCode(ResponseEnum.RANK_REPEATED.getCode());
+            resultModel.setMsg(ResponseEnum.RANK_REPEATED.getMsg());
+            resultModel.setTimestamp(System.currentTimeMillis()/1000);
+            return resultModel;
         }
     }
 
@@ -51,7 +59,13 @@ public class RankController {
      */
     @GetMapping("/score")
     public Object selectScoreSum(Integer songListId){
-        return rankService.selectScoreSum(songListId);
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(rankService.selectScoreSum(songListId));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -59,7 +73,13 @@ public class RankController {
      */
     @GetMapping("/num")
     public Object selectRankNum(Integer songListId){
-        return rankService.selectRankNum(songListId);
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(rankService.selectRankNum(songListId));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
 
     /**
@@ -68,10 +88,12 @@ public class RankController {
      */
     @GetMapping("/rank")
     public Object rankOfSongListId(Integer songListId){
-        return rankService.rankOfSongListId(songListId);
+        ResultModel resultModel = new ResultModel();
+        resultModel.setSuccess(ResponseEnum.SUCCESS.isSuccess());
+        resultModel.setCode(ResponseEnum.SUCCESS.getCode());
+        resultModel.setData(rankService.rankOfSongListId(songListId));
+        resultModel.setMsg(ResponseEnum.SUCCESS.getMsg());
+        resultModel.setTimestamp(System.currentTimeMillis()/1000);
+        return resultModel;
     }
-
-
-
-
 }

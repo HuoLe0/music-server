@@ -5,13 +5,21 @@ public enum ResponseEnum {
     SUCCESS("success", "成功", 1, true),
     ERROR("error", "失败", -1, false),
     NO_PERMISSION("no_permission", "无权限", -2, false),
+
     MODIFY_SUCCESS("modify_success", "修改成功", 666, true),
     MODIFY_FAILED("modify_failed", "修改失败", -1, false),
+
     LOGIN_SUCCESS("login_success", "登录成功", 1, true),
     LOGIN_FAILED("login_failed", "登录失败", -1, false),
+
     COLLECT_SUCCESS("collect_success", "收藏成功", 1, true),
     COLLECT_FAILED("collect_failed", "收藏失败", -1, false),
     COLLECT_REPEATED("collect_repeated", "重复收藏", -2, false),
+
+    RANK_SUCCESS("rank_success", "评价成功", 1, true),
+    RANK_FAILED("rank_failed", "评价失败", -1, false),
+    RANK_REPEATED("rank_repeated", "重复评价", -2, false),
+
     COMMENT_SUCCESS("comment_success", "评论成功", 1, true),
     COMMENT_FAILED("comment_failed", "评论失败", -1, false),
     COMMENT_NULL("comment_repeated", "评论内容为空", -2, false),

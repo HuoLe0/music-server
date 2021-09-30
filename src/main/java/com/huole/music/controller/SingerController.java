@@ -252,7 +252,7 @@ public class SingerController {
             e.printStackTrace();
             resultModel.setCode(ResponseEnum.UPLOAD_FAILED.getCode());
             resultModel.setSuccess(ResponseEnum.UPLOAD_FAILED.isSuccess());
-            resultModel.setMsg(ResponseEnum.UPLOAD_FAILED.getMsg());
+            resultModel.setMsg(e.getMessage());
             resultModel.setTimestamp(System.currentTimeMillis()/1000);
 
         }finally {
